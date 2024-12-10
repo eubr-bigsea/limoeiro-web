@@ -1,0 +1,57 @@
+@import './base.css';
+.bg-lemonade {
+  xbackground-color: #6f377c;
+
+  background-color: #001f3f;
+}
+body {
+  font-family: Abel, Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 13pt !important;
+}
+.btn-success,
+.btn-danger,
+.btn-info {
+  color: #fff;
+}
+/* Navbar */
+
+.toolbar {
+  width: calc(100% - 0px);
+  margin-left: 0px;
+  border-bottom: 1px solid #888;
+}
+
+.main-content {
+  margin-top: 56px;
+  margin-left: 60px;
+  transition: all 0.3s ease;
+  width: calc(100% - 60px);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .sidebar .menu-text {
+    display: none;
+  }
+
+  .sidebar:hover {
+    width: 250px;
+  }
+
+  .sidebar:hover .menu-text {
+    display: inline;
+  }
+}
+
+/* transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
