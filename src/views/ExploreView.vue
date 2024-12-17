@@ -17,11 +17,13 @@
             />
           </div>
         </div>
+        <!--
         <div class="col-md-3 col-lg-2 border-end">
           <h5>Artefatos</h5>
           <div>Teste Teste</div>
         </div>
-        <div class="col-md-9 col-lg-10">
+        -->
+        <div class="col-md-12 col-lg-12">
           <router-view v-slot="{ Component }">
             <transition v-if="Component" name="fade" mode="out-in">
               <component :is="Component" />

@@ -9,7 +9,12 @@
     <div class="d-flex sidebar-content flex-column vh-100">
       <ul class="nav flex-column mt-none">
         <li class="nav-item">
-          <router-link :to="{ name: 'explore' }" class="nav-link text-white text-nowrap active">
+          <router-link
+            :to="{ name: 'explore' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Navegue pelo catálogo de dados e de modelos"
+            aria-current-value="page"
+          >
             <div class="icon-wrapper">
               <telescope-icon class="sidebar-icon" />
             </div>
@@ -17,7 +22,12 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'about' }" class="nav-link text-white text-nowrap active">
+          <router-link
+            :to="{ name: 'about' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Exiba a lista de usuários"
+            aria-current-value="page"
+          >
             <div class="icon-wrapper">
               <Users class="sidebar-icon" />
             </div>
@@ -25,7 +35,12 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'domains' }" class="nav-link text-white text-nowrap active">
+          <router-link
+            :to="{ name: 'domains' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar domínios"
+            aria-current-value="page"
+          >
             <div class="icon-wrapper">
               <Crown class="sidebar-icon" />
             </div>
@@ -33,7 +48,12 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'layers' }" class="nav-link text-white text-nowrap active">
+          <router-link
+            :to="{ name: 'layers' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar camadas"
+            aria-current-value="page"
+          >
             <div class="icon-wrapper">
               <Layers2 class="sidebar-icon" />
             </div>
@@ -41,7 +61,11 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'tags' }" class="nav-link text-white text-nowrap active">
+          <router-link
+            :to="{ name: 'tags' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar tags"
+          >
             <div class="icon-wrapper">
               <Tags class="sidebar-icon" />
             </div>
@@ -51,7 +75,7 @@
       </ul>
       <ul class="nav flex-column mt-auto border-top mb-5">
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">
+          <a class="nav-link text-white" href="#" aria-label="Editar configurações">
             <div class="icon-wrapper">
               <Settings class="sidebar-icon" />
             </div>
@@ -59,7 +83,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">
+          <a class="nav-link text-white" href="#" aria-label="Sair, encerrando a sessão do usuário">
             <div class="icon-wrapper">
               <log-out class="sidebar-icon" />
             </div>

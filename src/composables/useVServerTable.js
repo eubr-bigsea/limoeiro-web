@@ -6,7 +6,7 @@ export function useVServerTable() {
     options: {
       debounce: 800,
       skin: 'table table-hover',
-      columnClasses: { actions: 'th-10' },
+      columnClasses: {},
       preserveState: true,
       saveState: true,
       filterByColumn: false,
@@ -41,6 +41,14 @@ export function useVServerTable() {
     },
     sortable(...names) {
       state.options.sortable = names
+      return this
+    },
+    columnsStyles(styles) {
+      state.options.columnsStyles = styles
+      return this
+    },
+    columnsClasses(cls) {
+      state.options.columnsClasses = cls
       return this
     },
     headSkin(skin) {

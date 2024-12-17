@@ -1,5 +1,5 @@
 <template>
-  <img :src="providerImageSrc" alt="" class="logo" :style="cssStyles" />
+  <img :src="providerImageSrc" :alt="`Provedor do tipo ${type}`" class="logo" :style="cssStyles" />
 </template>
 <script setup>
 import { ref, defineProps, onMounted } from 'vue'

@@ -6,6 +6,7 @@ import SchemaView from '@/views/SchemaView.vue'
 import TableView from '@/views/TableView.vue'
 import IAModelView from '@/views/IAModelView.vue'
 import DatabaseProviderView from '@/views/DatabaseProviderView.vue'
+import EditIngestion from '@/views/EditIngestion.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,20 @@ const router = createRouter({
           component: DatabaseProviderView,
           meta: { title: 'Provedores de dados' },
         },
+        {
+          path: 'database-providers/:id/ingestions/:ingestionId',
+          name: 'explore-database-providers-edit-ingestion',
+          component: EditIngestion,
+          meta: { title: 'Edição de ingestão de dados' },
+          props: true,
+        },
+        {
+          path: 'database-providers/:id/ingestions/',
+          name: 'explore-database-providers-add-ingestion',
+          component: EditIngestion,
+          meta: { title: 'Nova de ingestão de dados' },
+        },
+
         {
           path: 'databases/:id',
           name: 'explore-databases',
@@ -92,14 +107,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const title = document.querySelector('h2')
-  console.debug(title)
   document.title = to.meta.title + (title ? title.innerHTML : '')
   next()
 })
 
-router.afterEach((to, from, next) => {
-  const title = document.querySelector('h2')
-  console.debug(title)
-})
+// router.afterEach((to, from, next) => {
+//   const title = document.querySelector('h2')
+// })
 
 export default router

@@ -1,4 +1,7 @@
 @import './base.css';
+:root {
+  --bs-body-font-size: 1rem;
+}
 .bg-lemonade {
   xbackground-color: #6f377c;
 
@@ -6,7 +9,6 @@
 }
 body {
   font-family: Abel, Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 13pt !important;
 }
 .btn-success,
 .btn-danger,
@@ -54,4 +56,12 @@ body {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.control-label.required {
+  font-weight: bold;
+}
+.control-label.required:after {
+  content: '*';
+  color: red;
 }

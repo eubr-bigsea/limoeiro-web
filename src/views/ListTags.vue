@@ -32,10 +32,12 @@ const { columns, options } = useVServerTable()
     description: 'Descrição',
     actions: 'Ações',
   })
-  .skin('table table-bordered table-sm table-hover')
   .requestFunction(loadTags)
   .filterable('query')
   .sortable('name')
+  .skin('table table-bordered table-sm table-hover align-middle')
+  .columnsStyles({ actions: { width: '150px' } })
+  .columnsClasses({ actions: ['text-center'] })
   .build()
 
 const handleDelete = (row) => {

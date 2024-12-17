@@ -3,7 +3,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-lemonade fixed-top ms-auto toolbar">
     <div class="container-fluid">
       <div class="text-left me-5 logo">
-        <img class="logo" src="@/assets/lemonade_logo.svg" /><br />
+        <img class="logo" src="@/assets/lemonade_logo.svg" alt="Lemonade" /><br />
         <span class="navbar-brand">Limoeiro</span>
       </div>
       <div class="">
@@ -23,17 +23,18 @@
         </ul>
       --></div>
       <div class="ms-auto">
-        <ul class="navbar-nav">
+        <!-- <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" href="#"><Bell /></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"><UserCircle /></a>
           </li>
-        </ul>
+        </ul> -->
       </div>
-      <div class="ms-auto">
-        <input type="text" class="form-control form-control-sm" />
+      <div class="ms-auto d-flex flex-nowrap align-items-center">
+        <label for="query" class="text-white me-2">Pesquisar:</label>
+        <input type="text" class="form-control form-control-sm" id="query" />
       </div>
     </div>
   </nav>

@@ -26,8 +26,13 @@
                 v-if="perPageValues && perPageValues.length"
                 class="form-group form-inline float-end"
               >
-                <label for="limit">Limite</label>
-                <select v-model="perPage" name="limit" class="form-select form-select-sm">
+                <label :for="`limit-${limitId}`">Limite</label>
+                <select
+                  v-model="perPage"
+                  name="limit"
+                  class="form-select form-select-sm"
+                  :id="`limit-${limitId}`"
+                >
                   <option v-for="value in perPageValues" :key="value" :value="value">
                     {{ value }}
                   </option>
@@ -56,16 +61,21 @@
           :class="options.skin"
           :data-name="props.name"
         >
+          <colgroup>
+            <col
+              v-for="(heading, index) in columns"
+              :style="getColumnStyle(heading)"
+              :key="index"
+              class="text-center"
+            />
+          </colgroup>
           <thead :class="options.headSkin">
             <tr>
               <th
                 v-for="(heading, index) in columns"
                 :key="index"
                 class="header"
-                :class="{
-                  'sort-is': sortableColumns.includes(heading),
-                  'can-be-sorted': sortableColumns.includes(heading),
-                }"
+                :class="getColumnClass(heading, true)"
                 @click="handleSort(heading, $event)"
               >
                 {{ getTableHeader(heading) }}
@@ -74,13 +84,9 @@
           </thead>
           <tbody v-if="tableData.length !== 0">
             <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
-              <td
-                v-for="colName in columns"
-                :key="colName"
-                :class="getColumnClass(options.columnsClasses, colName)"
-              >
+              <td v-for="colName in columns" :key="colName" :class="getColumnClass(colName)">
                 <slot :name="colName" :row="row">
-                  <span :class="`${getColumnClass(options.columnsClasses, colName)}-scoped`">
+                  <span :class="`${getColumnClass(colName)}-scoped`">
                     {{ row[colName] }}
                   </span>
                 </slot>
@@ -120,6 +126,9 @@ import SpinnerDisplay from '@/components/SpinnerDisplay.vue'
 import PagerComponent from '@/components/PagerComponent.vue'
 
 import { ref, onMounted, computed, defineProps, watch, shallowRef } from 'vue'
+import { useId } from 'vue'
+
+const limitId = useId()
 
 const props = defineProps({
   options: { type: Object, required: true },
@@ -233,9 +242,24 @@ const populateTable = async () => {
   }
 }
 
-const getColumnClass = (columnClasses, columnName) => {
-  if (columnClasses) {
-    return columnClasses[columnName] || ''
+const getColumnClass = (columnName, header) => {
+  if (header) {
+    const result = {
+      'sort-is': sortableColumns.value.includes(columnName),
+      'can-be-sorted': sortableColumns.value.includes(columnName),
+    }
+    const newClasses = props.options?.columnsClasses?.[columnName] || []
+    newClasses.forEach((cls) => (result[cls] = true))
+    return result
+  } else if (props.options.columnsClasses) {
+    return props.options.columnsClasses[columnName] || ''
+  } else {
+    return null
+  }
+}
+const getColumnStyle = (columnName) => {
+  if (props.options.columnsStyles && props.options.columnsStyles[columnName]) {
+    return props.options.columnsStyles[columnName]
   } else {
     return null
   }
@@ -318,6 +342,9 @@ div.table-area {
 .server-table >>> td {
   padding: 5px 5px;
   font-size: 0.9em;
+}
+.server-table {
+  table-layout: auto;
 }
 
 /* Add your component-specific styles here */

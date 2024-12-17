@@ -21,7 +21,6 @@ const props = defineProps({
 </script>
 <style lang="scss" scoped>
 .bread-crumb {
-  color: #7492e9;
   font-size: 0.9em;
 }
 .bread-crumb span {

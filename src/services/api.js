@@ -6,8 +6,11 @@ export async function fetchResource(endpoint, options = {}) {
 
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(error.message || 'API Error')
+    throw error
   }
-
-  return response.json()
+  if (response.status != 204) {
+    return response.json()
+  } else {
+    return null
+  }
 }
