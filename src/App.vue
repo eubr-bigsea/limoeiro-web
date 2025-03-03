@@ -1,6 +1,6 @@
 <!-- Layout.vue -->
 <template>
-  <main class="d-flex vh-100">
+  <main class="d-flex main-content-area">
     <!-- Sidebar -->
     <side-bar />
     <!-- Main Content Area -->
@@ -23,13 +23,7 @@ import SideBar from '@/components/SideBar.vue'
 import MainToolbar from '@/components/MainToolbar.vue'
 </script>
 <style scoped>
-.main-content {
-  max-height: calc(100vh - 55px);
-  overflow: auto;
-  overflow-x: hidden;
-}
-main {
-  /* background: red; */
-  /* overflow: hidden; */
+.main-content-area {
+  xoverflow: hidden;
 }
 </style>

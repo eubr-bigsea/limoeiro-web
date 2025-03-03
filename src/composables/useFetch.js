@@ -6,10 +6,15 @@ export function useFetch(endpoint, options) {
   const error = ref(null)
   const isLoading = ref(false)
 
+  const defaults = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }
   const fetchData = async () => {
     isLoading.value = true
     try {
-      data.value = await fetchResource(endpoint, options)
+      data.value = await fetchResource(endpoint, { ...defaults, ...options })
     } catch (err) {
       error.value = err
     } finally {

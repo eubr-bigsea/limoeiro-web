@@ -1,10 +1,9 @@
 <template>
   <!-- Toolbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-lemonade fixed-top ms-auto toolbar">
+  <nav class="navbar navbar-expand-lg navbar-dark xbg-lemonade fixed-top ms-auto toolbar">
     <div class="container-fluid">
       <div class="text-left me-5 logo">
         <img class="logo" src="@/assets/lemonade_logo.svg" alt="Lemonade" /><br />
-        <span class="navbar-brand">Limoeiro</span>
       </div>
       <div class="">
         <!--
@@ -44,15 +43,21 @@ import { Bell, GlobeIcon, Home, Info, UserCircle } from 'lucide-vue-next'
 </script>
 <style scoped>
 img.logo {
-  -webkit-filter: invert(1);
-  filter: invert(0.8);
-  width: 100px;
+  /* -webkit-filter: invert(1);
+  filter: invert(0.8); */
+  width: 180px;
   height: auto;
   margin: 0;
-  padding: 0;
+  padding: 0px 5px;
 }
 div.logo {
   line-height: 14px;
   text-align: center;
+  padding-left: 0px;
+}
+.toolbar {
+  z-index: 1000;
+  background-color: #568f32;
+  background-color: #235c00;
 }
 </style>

@@ -36,6 +36,18 @@ const router = createRouter({
       meta: { title: 'Domínios' },
     },
     {
+      path: '/domains/add',
+      name: 'add-domain',
+      component: () => import('@/views/EditDomain.vue'),
+      meta: { title: 'Adicionar domínio' },
+    },
+    {
+      path: '/domains/edit/:id',
+      name: 'edit-domain',
+      component: () => import('@/views/EditDomain.vue'),
+      meta: { title: 'Editar domínio' },
+    },
+    {
       path: '/explore',
       name: 'explore',
       component: ExploreView,
@@ -97,10 +109,89 @@ const router = createRouter({
       meta: { title: 'Camadas' },
     },
     {
+      path: '/layers/add',
+      name: 'add-layer',
+      component: () => import('@/views/EditLayer.vue'),
+      meta: { title: 'Adicionar camada' },
+    },
+    {
+      path: '/layers/edit/:id',
+      name: 'edit-layer',
+      component: () => import('@/views/EditLayer.vue'),
+      meta: { title: 'Editar camada' },
+    },
+    {
+      path: '/companies',
+      name: 'companies',
+      component: () => import('@/views/ListCompanies.vue'),
+      meta: { title: 'Organizações' },
+    },
+    {
+      path: '/companies/add',
+      name: 'add-company',
+      component: () => import('@/views/EditCompany.vue'),
+      meta: { title: 'Adicionar organização' },
+    },
+    {
+      path: '/companies/edit/:id',
+      name: 'edit-company',
+      component: () => import('@/views/EditCompany.vue'),
+      meta: { title: 'Editar organização' },
+    },
+    {
+      path: '/people',
+      name: 'people',
+      component: () => import('@/views/ListPeople.vue'),
+      meta: { title: 'Pessoas' },
+    },
+    {
+      path: '/people/add',
+      name: 'add-person',
+      component: () => import('@/views/EditPerson.vue'),
+      meta: { title: 'Adicionar pessoa' },
+    },
+    {
+      path: '/people/edit/:id',
+      name: 'edit-person',
+      component: () => import('@/views/EditPerson.vue'),
+      meta: { title: 'Editar pessoa' },
+    },
+
+    {
       path: '/tags',
       name: 'tags',
       component: () => import('@/views/ListTags.vue'),
       meta: { title: 'Tags' },
+    },
+    {
+      path: '/tags/add',
+      name: 'add-tag',
+      component: () => import('@/views/EditTag.vue'),
+      meta: { title: 'Adicionar tag' },
+    },
+    {
+      path: '/tags/edit/:id',
+      name: 'edit-tag',
+      component: () => import('@/views/EditTag.vue'),
+      meta: { title: 'Editar tag' },
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('@/views/ListUsers.vue'),
+      meta: { title: 'Usuários' },
+    },
+    {
+      path: '/users/add',
+      name: 'add-user',
+      component: () => import('@/views/EditUser.vue'),
+      meta: { title: 'Adicionar usuário' },
+    },
+    {
+      path: '/users/edit/:id',
+      name: 'edit-user',
+      component: () => import('@/views/EditUser.vue'),
+      meta: { title: 'Editar usuário' },
     },
   ],
 })

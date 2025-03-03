@@ -1,7 +1,9 @@
 <template>
-  <div class="d-flex justify-content-between my-2">
-    <h5>{{ title }}</h5>
-    <button class="btn btn-sm btn-primary" @click="emit('add')">Adicionar <plus /></button>
+  <div class="d-flex justify-content-between my-2 border-top border-bottom py-1">
+    <h2>{{ title }}</h2>
+    <div class="d-flex align-items-center">
+      <button class="btn btn-sm btn-primary" @click="emit('add')">Adicionar <plus /></button>
+    </div>
   </div>
 </template>
 <script setup>

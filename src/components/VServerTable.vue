@@ -1,9 +1,9 @@
 <!-- VServerTable.vue -->
 <template>
-  <div class="v-server-table-area">
+  <div class="v-server-table-area border p-3 rounded-3">
     <slot v-if="options.filterable" name="filters">
       <div class="filters">
-        <form class="mb-4" @submit.prevent="$event.preventDefault()">
+        <form class="mb-4 px-1" @submit.prevent="$event.preventDefault()">
           <div class="justify-content-between d-flex">
             <div class="col-5">
               <label for="filter font-weight-bold">Filtro</label>

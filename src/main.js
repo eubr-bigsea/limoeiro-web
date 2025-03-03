@@ -11,7 +11,13 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+const formatDate = (dateString) => {
+  return new Intl.DateTimeFormat('pt-BR').format(new Date(dateString))
+}
+
 const app = createApp(App)
+
+app.config.globalProperties.$formatDate = formatDate
 
 // Prevents toasts of the same type from appearing simultaneously, discarding duplicates
 const filterBeforeCreate = (toast, toasts) => {
@@ -22,6 +28,25 @@ const filterBeforeCreate = (toast, toasts) => {
   // You can modify the toast if you want
   return toast
 }
+
+// Register a global custom directive called `v-focus`
+app.directive('focus', {
+  // Called when the directive is mounted to the element
+  mounted(el, binding) {
+    // Check if the binding value is not explicitly set to false
+    if (binding.value !== false) {
+      el.focus()
+    }
+  },
+
+  // Handle updates to the directive
+  updated(el, binding) {
+    // Refocus if the binding value changes and is not false
+    if (binding.value !== false) {
+      el.focus()
+    }
+  },
+})
 
 app.use(Toast, { position: POSITION.BOTTOM_RIGHT, filterBeforeCreate })
 app.use(createPinia())
