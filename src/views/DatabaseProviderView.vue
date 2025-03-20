@@ -29,7 +29,12 @@
             missing="<sem descrição fornecida>"
           />
         </div>
-        <tab-component :tabs="tabList" css-class="nav-underline border-bottom pb-0 mt-2 border-top">
+        <tab-component
+          :tabs="tabList"
+          css-class="nav-underline border-bottom pb-0 mt-2 border-top"
+          ref="tabs"
+          :active-tab="route.query.tab ? parseInt(route.query.tab) : 0"
+        >
           <template #databases="{ active }">
             <div class="my-4">
               <v-server-table :options="options" :columns="columns" ref="table" name="databases">
@@ -54,7 +59,7 @@
               </v-server-table>
             </div>
           </template>
-          <template v-if="false" #ingestions="{ active }">
+          <template #ingestions="{ active }">
             <router-link
               :to="{ name: 'explore-database-providers-add-ingestion' }"
               class="btn btn-sm btn-primary"
@@ -80,6 +85,9 @@
                 <template #deleted="props">
                   {{ props.row.deleted ? 'Não' : 'Sim' }}
                 </template>
+                <template #recent_runs_statuses="props">
+                  {{ props.row.recent_runs_statuses }}
+                </template>
               </v-server-table>
             </div>
           </template>
@@ -91,11 +99,7 @@
             />
           </template>
         </tab-component>
-        <modal-window
-          ref="editModal"
-          modal-class="modal-lg modal-dialog-centered"
-          modal-title="Editar"
-        >
+        <modal-window ref="editModal" modal-class="modal-lg modal-dialog-centered" title="Editar">
           <template #body="body"> </template>
         </modal-window>
       </div>
@@ -108,7 +112,7 @@
 
 <script setup>
 import { LucidePlusCircle } from 'lucide-vue-next'
-import { inject, watchEffect, computed, ref } from 'vue'
+import { inject, watchEffect, computed, ref, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
 import { useVServerTable } from '@/composables/useVServerTable.js'
@@ -158,13 +162,9 @@ const names = computed(() => {
     },
   ]
 })
-
 onMounted(async (v) => {
-  //table.value.refresh()
-  //ingestionTable.value.refresh()
-  //await loadConnection()
+  await Promise.all([loadConnection(), loadIngestions()])
 })
-
 const loadDatabases = async (options) => {
   const { data, fetchData } = useFetch(
     `/databases/?provider_id=${route.params.id}&query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
@@ -172,6 +172,7 @@ const loadDatabases = async (options) => {
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
+
 const table = ref({ refresh: () => {} })
 const ingestionTable = ref({ refresh: () => {} })
 const { columns, options } = useVServerTable()
@@ -197,6 +198,15 @@ const tabList = [
 ]
 
 /* Ingestions */
+const ingestions = ref([])
+const loadIngestions = async () => {
+  const { data, fetchData } = useFetch(`/ingestions/?provider_id=${route.params.id}`)
+  await fetchData()
+  ingestions.value = data.value.items
+
+  return { data: data.value.items, count: data.value.count }
+}
+
 const { columns: columnsIngestion, options: optionsIngestion } = useVServerTable()
   .name('ingestions')
   .columns('name', 'type', 'deleted', 'recent_runs_statuses', 'actions')
@@ -207,10 +217,9 @@ const { columns: columnsIngestion, options: optionsIngestion } = useVServerTable
     deleted: 'Habilitada',
     last: 'Últimos estados',
     actions: 'Ações',
+    recent_runs_statuses: 'Status recente',
   })
-  .requestFunction((options) => {
-    return { data: selected.value.ingestions, count: selected.value.ingestions.length }
-  })
+  .requestFunction(loadIngestions)
   .sortable('name')
   .build()
 
@@ -233,7 +242,7 @@ const handleDeleteIngestion = async (row) => {
 const connection = ref()
 /* Connection */
 const loadConnection = async () => {
-  const { data, fetchData } = useFetch(`/connections/?provider_id=${selected.value.id}`)
+  const { data, fetchData } = useFetch(`/connections/?provider_id=${route.params.id}`)
   await fetchData()
   connection.value =
     data.value.count > 0

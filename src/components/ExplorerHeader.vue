@@ -10,10 +10,10 @@
       <LucideLayers size="15px" fill="#ddd" stroke="#222" />
       <layer-selector title="Domínio" v-model="editLayer" missing="<nenhuma camada>" />
     </div>
-    <div class="ms-auto mt-4">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" v-model="editDeleted" id="deleted" />
-        <label class="form-check-label" for="deleted"> Desabilitado </label>
+    <div class="ms-auto mt-2">
+      <div class="form-check form-switch mt-4">
+        <input class="form-check-input" type="checkbox" role="switch" v-model="editDeleted" />
+        <label class="form-check-label" for="deleted">Desabilitado</label>
       </div>
     </div>
   </div>

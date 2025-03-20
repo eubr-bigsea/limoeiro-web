@@ -26,19 +26,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineExpose, defineEmits } from 'vue'
 
-defineProps({
+const props = defineProps({
   tabs: {
     type: Array,
     required: true,
   },
   cssClass: { type: String },
+  activeTab: { type: Number, default: 0 },
 })
 
-const activeTab = ref(0)
+const activeTab = ref(props.activeTab)
 
+//const emit = defineEmits([''])
 const setActiveTab = (index) => {
   activeTab.value = index
+  if (props.tabs[index].onActivate) {
+    props.tabs[index].onActivate()
+  }
 }
+defineExpose({ setActiveTab })
 </script>

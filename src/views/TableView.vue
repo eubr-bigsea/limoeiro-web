@@ -70,7 +70,9 @@
             <div v-else>Nenhuma coluna definida</div>
           </template>
           <template #sample="{ active }">
-            <div v-if="active">Content for Tab 2</div>
+            <div v-if="active">
+              <TableSampleDisplay v-if="showSamples" :table-id="selected.id" />
+            </div>
           </template>
           <template #queries="{ active }">
             <div v-if="active">Content for Tab 3</div>
@@ -92,6 +94,8 @@ import ExplorerHeader from '@/components/ExplorerHeader.vue'
 import CollapsableEditor from '@/components/ui/CollapsableEditor.vue'
 import ExplorerRightBar from '@/components/ExplorerRightBar.vue'
 import { useUpdateAssetProperty } from '@/composables/useUpdateAssetProperty'
+
+import TableSampleDisplay from '@/components/TableSampleDisplay.vue'
 
 defineProps(['id'])
 const selected = inject('selected')
@@ -135,14 +139,16 @@ const tableTypes = {
 const tableType = computed(() => {
   return tableTypes[selected.value.type]
 })
+
 // Tabs
+const showSamples = ref(false)
 const tabList = [
   { title: 'Colunas', slotName: 'columns' },
-  { title: 'Amostra', slotName: 'sample' },
-  { title: 'Consultas', slotName: 'queries' },
-  { title: 'Qualidade de dados', slotName: 'dataQuality' },
-  { title: 'Linhagem', slotName: 'lineage' },
-  { title: 'Propriedades personalizadas', slotName: 'customProperties' },
+  { title: 'Amostras', slotName: 'sample', onActivate: () => (showSamples.value = true) },
+  // { title: 'Consultas', slotName: 'queries' },
+  // { title: 'Qualidade de dados', slotName: 'dataQuality' },
+  // { title: 'Linhagem', slotName: 'lineage' },
+  // { title: 'Propriedades personalizadas', slotName: 'customProperties' },
 ]
 const showCompleteColInfo = ref(false)
 

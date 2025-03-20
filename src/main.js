@@ -14,10 +14,18 @@ import router from './router'
 const formatDate = (dateString) => {
   return new Intl.DateTimeFormat('pt-BR').format(new Date(dateString))
 }
+function formatDateHour(dateString) {
+  const date = new Date(dateString)
+
+  const format = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+
+  return format.format(date)
+}
 
 const app = createApp(App)
 
 app.config.globalProperties.$formatDate = formatDate
+app.config.globalProperties.$formatDateHour = formatDateHour
 
 // Prevents toasts of the same type from appearing simultaneously, discarding duplicates
 const filterBeforeCreate = (toast, toasts) => {

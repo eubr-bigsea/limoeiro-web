@@ -100,6 +100,20 @@
           </router-link>
         </li>
       </ul>
+      <ul class="nav flex-column border-top mb-5">
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'search' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Pesquisar ativos"
+          >
+            <div class="icon-wrapper">
+              <LucideSearch class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Pesquisar ativos</span>
+          </router-link>
+        </li>
+      </ul>
       <ul class="nav flex-column mt-auto border-top mb-5">
         <li class="nav-item">
           <router-link
@@ -151,6 +165,7 @@ import {
   Layers,
   LucideContact2,
   LucideUsers,
+  LucideSearch,
 } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

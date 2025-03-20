@@ -5,21 +5,26 @@
       <div class="filters">
         <form class="mb-4 px-1" @submit.prevent="$event.preventDefault()">
           <div class="justify-content-between d-flex">
-            <div class="col-5">
-              <label for="filter font-weight-bold">Filtro</label>
-              <input
-                :value="query"
-                type="text"
-                placeholder="Busca"
-                name="filter"
-                autocomplete="off"
-                class="form-control form-control-sm"
-                maxlength="50"
-                @input="search($event)"
-              />
-            </div>
-            <div class="col-5">
-              <slot name="afterFilter"></slot>
+            <template v-if="showFilter">
+              <div class="col-5">
+                <label for="filter" class="font-weight-bold">Filtro</label>
+                <input
+                  :value="query"
+                  type="text"
+                  placeholder="Busca"
+                  name="filter"
+                  autocomplete="off"
+                  class="form-control form-control-sm"
+                  maxlength="50"
+                  @input="search($event)"
+                />
+              </div>
+              <div class="col-5">
+                <slot name="afterFilter"></slot>
+              </div>
+            </template>
+            <div v-else class="col-10">
+              <slot name="customFilter"></slot>
             </div>
             <div class="col-2 text-end">
               <span
@@ -135,6 +140,7 @@ const props = defineProps({
   columns: { type: Array, required: true },
   name: { type: String, required: false, default: Math.random().toString(36).slice(2, 7) },
   showSkeleton: { type: Boolean, required: false, default: true },
+  showFilter: { type: Boolean, required: false, default: true },
 })
 
 const getTableHeader = (col) =>
@@ -216,7 +222,7 @@ const populateTable = async () => {
       const { data, count, customQueries } = await props.options.requestFunction(defaultOptions)
 
       if (props.options?.saveState) {
-        tableCustomQueries.value = customQueries
+        //tableCustomQueries.value = customQueries
         const params = { orderBy: {} }
         params.orderBy.column = sortColumn.value
         params.orderBy.ascending = sortDirection.value === 'asc'
@@ -340,7 +346,7 @@ div.table-area {
   overflow: auto;
 }
 .server-table >>> td {
-  padding: 5px 5px;
+  padding: 0.5rem 0.5rem;
   font-size: 0.9em;
 }
 .server-table {

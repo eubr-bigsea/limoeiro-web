@@ -151,7 +151,7 @@
         />
       </div>
 
-      <div class="bg-info my-4">Form is invalid ?{{ v$.$invalid }} {{ v$.$anyDirty }}</div>
+      <!-- <div class="bg-info my-4">Form is invalid ?{{ v$.$invalid }} {{ v$.$anyDirty }}</div>
       <div class="bg-info my-4">
         {{ v$.name.$errors }}
         {{ v$.name.$dirty }}
@@ -159,7 +159,7 @@
         <br />
         Error |{{ v$.$dirty }} | Dirty {{ v$.$pending }} | Invalid {{ v$.$invalid }}
         {{ state }}
-      </div>
+      </div> -->
 
       <div class="col-12">
         <button
@@ -173,7 +173,11 @@
         </button>
         <router-link
           class="btn btn-secondary btn-sm px-4"
-          :to="{ name: 'explore-database-providers', params: { id: route.params.id } }"
+          :to="{
+            name: 'explore-database-providers',
+            params: { id: route.params.id },
+            query: { tab: 1 },
+          }"
         >
           Cancelar
         </router-link>

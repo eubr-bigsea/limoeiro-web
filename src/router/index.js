@@ -48,6 +48,12 @@ const router = createRouter({
       meta: { title: 'Editar domínio' },
     },
     {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/views/SearchView.vue'),
+      meta: { title: 'Pesquisa de ativos' },
+    },
+    {
       path: '/explore',
       name: 'explore',
       component: ExploreView,

@@ -49,7 +49,7 @@
       </li>
     </ul>
     <ul v-else-if="notFound" class="options">
-      <li>Nenhum registro encontrado</li>
+      <li @click="emit('cancel')">Nenhum registro encontrado</li>
     </ul>
   </div>
 </template>
@@ -94,7 +94,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue', 'change', 'update:value'])
+const emit = defineEmits(['update:modelValue', 'change', 'update:value', 'cancel'])
 
 // Estado local do componente
 const searchQuery = ref('')

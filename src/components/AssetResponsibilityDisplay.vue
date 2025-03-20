@@ -15,6 +15,7 @@
       <!-- -->
       <div v-if="editing" class="px-1">
         <label>Contato</label>
+        <span v-if="alreadyExists" class="text-danger"> já cadastrado</span>
         <LookupComponent
           :fetchFunction="retrieveContacts"
           v-model="newResponsibility.contact"
@@ -30,7 +31,7 @@
             {{ type.name }}
           </option>
         </select>
-        <button class="btn btn-sm" title="Cancelar" @click="save">
+        <button v-if="!alreadyExists" class="btn btn-sm" title="Salvar" @click="save">
           <LucideSave size="15px" color="green" />
         </button>
         <button class="btn btn-sm" title="Cancelar" @click="editing = false">
@@ -79,7 +80,6 @@
 <script setup>
 import {
   LucideChevronDown,
-  LucideEdit3,
   LucideKeySquare,
   LucidePlus,
   LucideSave,
@@ -115,10 +115,16 @@ const grouped = computed(() => {
   )
   return x
 })
+const selected = computed(() => {
+  return props.modelValue.map((v) => `${v.type.id},${v.contact.id}`)
+})
 const editing = ref(false)
-const input = ref()
 const newResponsibility = ref({})
 const responsibilityTypes = ref([])
+const alreadyExists = computed(() => {
+  const { contact_id, type_id } = newResponsibility.value
+  return selected.value.includes(`${type_id},${contact_id}`)
+})
 
 const save = () => {
   const { contact_id, type_id } = newResponsibility.value
@@ -127,7 +133,7 @@ const save = () => {
 }
 
 const loadResponsibilityTypes = async () => {
-  const { data, fetchData, isLoading } = useFetch('/responsibility-types/?sort_by=name')
+  const { data, fetchData } = useFetch('/responsibility-types/?sort_by=name')
   await fetchData()
   responsibilityTypes.value = data.value.items
 }
@@ -140,10 +146,6 @@ const startEditing = () => {
 const add = () => {
   newResponsibility.value = {}
   startEditing()
-}
-const edit = (item) => {
-  startEditing()
-  newResponsibility.value = { ...item }
 }
 const remove = (item) => {
   emit('remove', item)

@@ -34,6 +34,7 @@
         mode="control"
         ref="lookup"
         @change="save"
+        @cancel="editing = false"
       />
       <button class="btn btn-sm" title="Cancelar" @click="editing = false">
         <LucideUndo2 size="15px" />
@@ -43,7 +44,7 @@
 </template>
 <script setup>
 import { LucidePlus, LucideSave, LucideTags, LucideTrash2, LucideUndo2 } from 'lucide-vue-next'
-import { ref, defineEmits, defineProps, watch, nextTick } from 'vue'
+import { computed, ref, defineEmits, defineProps, watch, nextTick } from 'vue'
 import LoadingIndicator from './ui/LoadingIndicator.vue'
 import LookupComponent from './ui/LookupComponent.vue'
 import { useFetch } from '@/composables/useFetch'
@@ -61,6 +62,9 @@ const editing = ref(false)
 const newTag = ref({})
 const lookup = ref()
 
+const selectedIds = computed(() => {
+  return editable.value.map((v) => v.id)
+})
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -83,6 +87,6 @@ const add = () => {
 const retrieveOptions = async (query) => {
   const { data, fetchData } = useFetch(`/tags/?query=${query}&sort_by=name&page_size=10`)
   await fetchData()
-  return data.value.items
+  return data.value.items.filter((v) => !selectedIds.value.includes(v.id))
 }
 </script>

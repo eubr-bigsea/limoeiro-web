@@ -35,3 +35,20 @@ let count = 0
 export function newId(prefix = 'id-') {
   return `${prefix}${++count}`
 }
+export function createQueryString(obj) {
+  const params = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, v))
+    } else if (typeof value === 'object' && value !== null) {
+      for (const [innerKey, innerValue] of Object.entries(value)) {
+        params.append(`${key}[${innerKey}]`, innerValue)
+      }
+    } else {
+      params.append(key, value)
+    }
+  }
+
+  return params.toString()
+}

@@ -96,7 +96,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, reactive, defineProps } from 'vue'
+import { reactive, defineProps } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, integer, minValue } from '@vuelidate/validators'
 import { useFetch } from '@/composables/useFetch.js'
@@ -113,6 +113,14 @@ const props = defineProps({
   provider_id: { type: String, required: true },
 })
 
+const validateJson = (value) => {
+  try {
+    JSON.parse(value)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 // Validation rules
 const rules = {
   host: {
@@ -137,7 +145,9 @@ const rules = {
     required: helpers.withMessage('Senha é obrigatória', required),
     $autoDirty: true,
   },
-  extra_parameters: {},
+  extra_parameters: {
+    validateJson: helpers.withMessage('JSON inválido', validateJson),
+  },
 }
 
 const defaults = {

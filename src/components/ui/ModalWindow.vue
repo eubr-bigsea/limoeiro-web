@@ -11,8 +11,10 @@
       <div :class="['modal-dialog', modalClass]" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ modalTitle }}</h5>
-            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+            <slot name="modal-title">
+              <h5 class="modal-title">{{ title }}</h5>
+            </slot>
+            <button type="button" class="btn-close" @click="close" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <slot name="body">
@@ -25,11 +27,11 @@
                 v-if="showCancelButton"
                 type="button"
                 class="btn btn-secondary"
-                @click="closeModal"
+                @click="close"
               >
                 {{ cancelButtonLabel }}
               </button>
-              <button v-if="showOkButton" type="button" class="btn btn-success">
+              <button v-if="showOkButton" type="button" class="btn btn-success" @click="close">
                 {{ okButtonLabel }}
               </button>
             </slot>
@@ -46,7 +48,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 export default {
   name: 'ModalComponent',
   props: {
-    modalTitle: {
+    title: {
       type: String,
       default: 'Modal Title',
     },
@@ -74,19 +76,19 @@ export default {
   setup(props, { expose }) {
     const isVisible = ref(false)
 
-    const openModal = () => {
+    const show = () => {
       isVisible.value = true
       document.body.classList.add('modal-open')
     }
 
-    const closeModal = () => {
+    const close = () => {
       isVisible.value = false
       document.body.classList.remove('modal-open')
     }
 
     const handleEscapeKey = (event) => {
       if (event.key === 'Escape' && isVisible.value) {
-        closeModal()
+        close()
       }
     }
 
@@ -98,11 +100,11 @@ export default {
       document.removeEventListener('keydown', handleEscapeKey)
     })
 
-    expose({ openModal })
+    expose({ show })
 
     return {
       isVisible,
-      closeModal,
+      close,
     }
   },
 }

@@ -31,15 +31,19 @@
           </li>
         </ul> -->
       </div>
-      <div class="ms-auto d-flex flex-nowrap align-items-center">
-        <label for="query" class="text-white me-2">Pesquisar:</label>
-        <input type="text" class="form-control form-control-sm" id="query" />
-      </div>
+      <!-- <div class="ms-auto d-flex flex-nowrap align-items-center w-25">
+        <div class="input-group">
+          <input type="text" class="form-control form-control-sm shadow-none" />
+          <span class="input-group-text p-0 px-3" role="button">
+            <LucideSearch size="16" />Pesquisar
+          </span>
+        </div>
+      </div> -->
     </div>
   </nav>
 </template>
 <script setup>
-import { Bell, GlobeIcon, Home, Info, UserCircle } from 'lucide-vue-next'
+import { Bell, GlobeIcon, Home, Info, LucideSearch, UserCircle } from 'lucide-vue-next'
 </script>
 <style scoped>
 img.logo {
