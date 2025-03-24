@@ -4,8 +4,8 @@
     <div
       class="d-flex align-items-center justify-content-between py-2 my-1 border-top border-bottom gap-2"
     >
-      <View v-if="selected.type === 'VIEW'" size="36px" />
-      <Table2 v-if="selected.type === 'REGULAR'" size="36px" color="gold" />
+      <LucideEye v-if="selected.type === 'VIEW'" size="36px" color="gray" />
+      <LucideTable2 v-if="selected.type === 'REGULAR'" size="36px" color="navy" />
       <h2 class="mb-0">{{ selected.display_name }}</h2>
       <div class="ms-auto">
         {{ tableType }}
@@ -45,24 +45,43 @@
               <table class="table table-striped table-bordered">
                 <thead class="bg-primary text-white">
                   <tr>
+                    <th colspan="2"></th>
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th v-if="showCompleteColInfo">Exibição</th>
                     <th>Tipo</th>
-                    <th>Aceita nulos?</th>
-                    <th v-if="showCompleteColInfo">Chave primária</th>
-                    <th v-if="showCompleteColInfo">Único</th>
+                    <th class="text-center">Aceita nulos?</th>
+                    <th class="text-center" v-if="showCompleteColInfo">Chave primária</th>
+                    <th class="text-center" v-if="showCompleteColInfo">Único</th>
+                    <th class="text-center" v-if="showCompleteColInfo">Tipo semântico</th>
+                    <th class="text-center" v-if="showCompleteColInfo">Valor default</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="col in selected.columns" :key="col.id">
+                  <tr v-for="(col, i) in selected.columns" :key="col.id">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td class="text-center">
+                      <LucideKeySquare v-if="col.primary_key" size="12" />
+                    </td>
                     <td>{{ col.name }}</td>
                     <td>{{ col.description }}</td>
                     <td v-if="showCompleteColInfo">{{ col.display_name }}</td>
                     <td>{{ col.data_type }}{{ col.size ? `(${col.size})` : '' }}</td>
-                    <td>{{ col.nullable ? 'Sim' : 'Não' }}</td>
-                    <td v-if="showCompleteColInfo">{{ col.primary_key ? 'Sim' : 'Não' }}</td>
-                    <td v-if="showCompleteColInfo">{{ col.unique ? 'Sim' : 'Não' }}</td>
+                    <td class="text-center">
+                      {{ col.nullable ? 'Sim' : 'Não' }}
+                    </td>
+                    <td class="text-center" v-if="showCompleteColInfo">
+                      {{ col.primary_key ? 'Sim' : 'Não' }}
+                    </td>
+                    <td class="text-center" v-if="showCompleteColInfo">
+                      {{ col.unique ? 'Sim' : 'Não' }}
+                    </td>
+                    <td v-if="showCompleteColInfo">
+                      {{ col.semantic_type }}
+                    </td>
+                    <td v-if="showCompleteColInfo">
+                      {{ col.default_value }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -86,7 +105,7 @@
   </div>
 </template>
 <script setup>
-import { Table2, View } from 'lucide-vue-next'
+import { LucideEye, LucideKeySquare, LucideTable2 } from 'lucide-vue-next'
 import { inject, computed, ref } from 'vue'
 import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import TabComponent from '@/components/ui/TabComponent.vue'

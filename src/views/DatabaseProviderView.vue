@@ -38,6 +38,23 @@
           <template #databases="{ active }">
             <div class="my-4">
               <v-server-table :options="options" :columns="columns" ref="table" name="databases">
+                <template #afterFilter>
+                  <div class="ms-4">
+                    <div class="form-check form-switch mt-4">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        v-model="showDeleted"
+                        @change="table.refresh()"
+                        id="deleted"
+                      />
+                      <label class="form-check-label fw-normal" for="deleted"
+                        >Exibir desabilitados</label
+                      >
+                    </div>
+                  </div>
+                </template>
                 <template #actions>
                   <row-list-action-buttons />
                 </template>
@@ -45,6 +62,9 @@
                   <router-link v-if="props.row.domain" :to="{ name: 'domains' }">
                     {{ props.row.domain.display_name }}
                   </router-link>
+                </template>
+                <template #deleted="props">
+                  {{ props.row.deleted ? 'Sim' : 'Não' }}
                 </template>
                 <template #layer="props">
                   <router-link v-if="props.row.layer" :to="{ name: 'layers' }">
@@ -165,10 +185,22 @@ const names = computed(() => {
 onMounted(async (v) => {
   await Promise.all([loadConnection(), loadIngestions()])
 })
+const showDeleted = ref(false)
+
 const loadDatabases = async (options) => {
-  const { data, fetchData } = useFetch(
-    `/databases/?provider_id=${route.params.id}&query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
-  )
+  const queryParams = {
+    provider_id: route.params.id,
+    query: options.query || '',
+    sort_by: options.orderBy,
+    sort_order: options.ascending ? 'asc' : 'desc',
+    page: options.page,
+    page_size: options.limit,
+  }
+  if (!showDeleted.value) {
+    queryParams.deleted = false
+  }
+
+  const { data, fetchData } = useFetch(`/databases/?${new URLSearchParams(queryParams).toString()}`)
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
@@ -177,7 +209,7 @@ const table = ref({ refresh: () => {} })
 const ingestionTable = ref({ refresh: () => {} })
 const { columns, options } = useVServerTable()
   .name('ingestions')
-  .columns('display_name', 'domain', 'layer')
+  .columns('display_name', 'domain', 'layer', 'deleted')
   .headSkin('table-secondary')
   .headings({
     display_name: 'Nome',
@@ -185,7 +217,9 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     domain: 'Domínio',
     layer: 'Camada',
+    deleted: 'Desabilitado',
   })
+  .columnsClasses({ deleted: ['text-center'] })
   .requestFunction(loadDatabases)
   .filterable('query')
   .sortable('display_name')

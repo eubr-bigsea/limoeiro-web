@@ -28,6 +28,9 @@
                         {{ props.row.layer.name }}
                       </router-link>
                     </template>
+                    <template #type="props">
+                      {{ props.row.provider_type.display_name }}
+                    </template>
                     <template #display_name="props">
                       <router-link
                         :to="{ name: 'explore-database-providers', params: { id: props.row.id } }"
@@ -149,7 +152,7 @@ const loadProviders = async (options) => {
 }
 const { columns, options } = useVServerTable()
   //.filterable('id')
-  .columns('display_name', 'domain')
+  .columns('display_name', 'domain', 'type')
   .headSkin('table-primary')
   .requestFunction(loadProviders)
   .headings({
@@ -158,6 +161,7 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     domain: 'Domínio',
     layer: 'Camada',
+    provider_type: 'Tipo',
   })
   .filterable('query')
   .sortable('display_name')
