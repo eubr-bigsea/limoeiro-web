@@ -46,7 +46,7 @@ defineExpose({
 .dropdown-menu {
   font-size: 0.9em;
   min-width: 200px;
-  max-height: 250px;
+  /*max-height: 250px;*/
   overflow-y: auto;
   display: block;
   position: absolute;

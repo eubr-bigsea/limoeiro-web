@@ -14,6 +14,7 @@
           v-model:domain="selected.domain"
           v-model:layer="selected.layer"
           v-model:deleted="selected.deleted"
+          :notes="selected.notes"
           @update:domain="(event) => updateProperty('domain_id', event)"
           @update:layer="(event) => updateProperty('layer_id', event)"
           @update:deleted="(event) => updateProperty('deleted', event)"
@@ -64,7 +65,11 @@
               </router-link>
             </template>
             <template #display_name="props">
-              <router-link :to="{ name: 'explore-schemas', params: { id: props.row.id } }">
+              <LucideFolder size="15" fill="gold" />
+              <router-link
+                :to="{ name: 'explore-schemas', params: { id: props.row.id } }"
+                class="ms-1"
+              >
                 {{ props.row.display_name }}
               </router-link>
             </template>
@@ -105,7 +110,9 @@
               <row-list-action-buttons />
             </template>
             <template #database_schema="props">
+              <LucideFolder size="15" fill="gold" />
               <router-link
+                class="ms-1"
                 v-if="props.row.database_schema"
                 :to="{ name: 'explore-schemas', params: { id: props.row.database_schema.id } }"
               >
@@ -123,7 +130,12 @@
               </router-link>
             </template>
             <template #display_name="props">
-              <router-link :to="{ name: 'explore-tables', params: { id: props.row.id } }">
+              <LucideTable2 v-if="props.row.type == 'REGULAR'" size="15" color="navy" />
+              <LucideEye v-if="props.row.type == 'VIEW'" size="15" color="navy" />
+              <router-link
+                :to="{ name: 'explore-tables', params: { id: props.row.id } }"
+                class="ms-1"
+              >
                 {{ props.row.display_name }}
               </router-link>
             </template>
@@ -141,7 +153,7 @@
 </template>
 
 <script setup>
-import { LucideDatabase } from 'lucide-vue-next'
+import { LucideDatabase, LucideFolder, LucideEye, LucideTable2 } from 'lucide-vue-next'
 import { inject, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
@@ -203,14 +215,21 @@ const tableSchemas = ref()
 const tableTables = ref()
 
 const loadSchemas = async (options) => {
+  const queryParams = {
+    database_id: selected.value.id,
+    query: options.query || '',
+    sort_by: options.orderBy,
+    sort_order: options.ascending ? 'asc' : 'desc',
+    page: options.page,
+  }
   const { data, error, isLoading, fetchData } = useFetch(
-    `/schemas/?database_id=${selected.value.id}&query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
+    `/schemas/?${new URLSearchParams(queryParams).toString()}`,
   )
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
 const { columns, options } = useVServerTable()
-  .columns('display_name', 'domain', 'layer', 'deleted')
+  .columns('display_name', 'notes', 'domain', 'layer', 'deleted')
   .headSkin('table-primary')
   .requestFunction(loadSchemas)
   .headings({
@@ -220,15 +239,16 @@ const { columns, options } = useVServerTable()
     domain: 'Domínio',
     layer: 'Camada',
     deleted: 'Desabilitado',
+    notes: 'Notas',
   })
   .columnsClasses({ deleted: ['text-center'] })
   .filterable('query')
   .sortable('display_name')
   .build()
 
-const displayColumns = selected.value?.provider?.type?.supports_schema
-  ? ['display_name', 'domain', 'layer', 'database_schema', 'deleted']
-  : ['display_name', 'domain', 'layer', 'deleted']
+const displayColumns = selected.value?.provider?.provider_type?.supports_schema
+  ? ['display_name', 'notes', 'database_schema', 'domain', 'layer', 'deleted']
+  : ['display_name', 'notes', 'domain', 'layer', 'deleted']
 
 const { columns: columnsTables, options: optionsTables } = useVServerTable()
   .columns(...displayColumns)
@@ -242,6 +262,7 @@ const { columns: columnsTables, options: optionsTables } = useVServerTable()
     domain: 'Domínio',
     layer: 'Camada',
     deleted: 'Desabilitado',
+    notes: 'Notas',
   })
   .columnsClasses({ deleted: ['text-center'] })
   .filterable('query')

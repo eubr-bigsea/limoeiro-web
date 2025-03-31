@@ -1,4 +1,7 @@
 <template>
+  <div class="text-muted fs-5" title="Informação recuperada dos metadados">
+    {{ notes }}
+  </div>
   <div class="d-flex gap-2">
     <div class="w-40 p-2">
       Domínio
@@ -29,6 +32,7 @@ const props = defineProps({
   domain: { type: Object, required: false },
   layer: { type: Object, required: false },
   deleted: { type: Boolean, required: true },
+  notes: { type: String, required: false },
 })
 const editDomain = ref(props.domain)
 const editLayer = ref(props.layer)

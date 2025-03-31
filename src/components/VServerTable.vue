@@ -127,6 +127,7 @@
 
 <script setup>
 import { debounce } from '@/util.js'
+import { defineEmits } from 'vue'
 import SpinnerDisplay from '@/components/SpinnerDisplay.vue'
 import PagerComponent from '@/components/PagerComponent.vue'
 
@@ -143,6 +144,7 @@ const props = defineProps({
   showFilter: { type: Boolean, required: false, default: true },
 })
 
+const emit = defineEmits(['loaded'])
 const getTableHeader = (col) =>
   'headings' in props.options && props.options.headings[col]
     ? props.options.headings[col]
@@ -230,6 +232,9 @@ const populateTable = async () => {
         params.query = query.value
         params.page = currentPage.value
         params.customQueries = tableCustomQueries.value
+        if (persistData.value) {
+          localStorage[`vuetables_${props.name}:persisted`] = JSON.stringify(persistData.value)
+        }
         localStorage[`vuetables_${props.name}`] = JSON.stringify(params)
       }
       tableData.value = data || []
@@ -297,15 +302,17 @@ const load = () => {
   if (props.options?.saveState) {
     if (props.options.saveState) {
       const saved = localStorage[`vuetables_${props.name}`]
+      const persisted = localStorage[`vuetables_${props.name}:persisted`]
       if (saved) {
         try {
           const params = JSON.parse(saved)
           sortColumn.value = params.orderBy?.column
-          ;(sortDirection.value = params.orderBy.ascending ? 'asc' : 'desc'),
-            (perPage.value = params.perPage),
-            (query.value = params.query),
-            (currentPage.value = params.page)
+          sortDirection.value = params.orderBy.ascending ? 'asc' : 'desc'
+          perPage.value = params.perPage
+          query.value = params.query
+          currentPage.value = params.page
           tableCustomQueries.value = params.customQueries
+          emit('loaded', params, persisted ? JSON.parse(persisted) : {})
         } catch (e) {
           console.debug(e)
           //ignore
@@ -328,6 +335,8 @@ const setLoading = (v) => (loading.value = v)
 watch(currentPage, populateTable)
 watch(perPage, populateTable)
 
+const persistData = ref()
+const persist = (data) => (persistData.value = data)
 defineExpose({
   setFilter,
   getData,
@@ -336,6 +345,7 @@ defineExpose({
   setCurrentPage,
   setFirstLoad,
   setLoading,
+  persist,
 })
 </script>
 
