@@ -14,12 +14,11 @@ RUN npm run build
 # Usa uma imagem nginx para servir a aplicação
 FROM nginx:alpine
 
-# Copia os arquivos da build para o Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN apk update && apk add openssl
 
-# Expõe a porta 80
-EXPOSE 80
-
-# Comando de inicialização
-CMD ["nginx", "-g", "daemon off;"]
-
+COPY --from=build /app/dist /var/www
+RUN mkdir -p /etc/nginx/ssl/private/ && mkdir -p /etc/nginx/ssl/cert/
+RUN openssl req -x509 -new -newkey rsa:4096 -sha256 -days 3650 -nodes  -keyout /etc/nginx/ssl/private/cert.key -out /etc/nginx/ssl/cert/cert.crt -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost,IP:10.21.0.126"
+COPY nginx.conf /etc/nginx/nginx.conf
+#EXPOSE 3000
+ENTRYPOINT ["nginx","-g","daemon off;"]
