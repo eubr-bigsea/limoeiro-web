@@ -118,7 +118,7 @@ const names = computed(() => [
     route: 'tags',
   },
   {
-    label: editing.value ? 'Edição' : 'Nova tag',
+    label: editing.value ? state.name : 'Nova tag',
   },
 ])
 onMounted(async () => {

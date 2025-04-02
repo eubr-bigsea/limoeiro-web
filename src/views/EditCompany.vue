@@ -207,11 +207,11 @@ const handleSave = async () => {
 }
 const names = computed(() => [
   {
-    label: 'Organizações',
+    label: 'Domínios',
     route: 'companies',
   },
   {
-    label: editing.value ? 'Edição' : 'Nova organização',
+    label: editing.value ? state.id : 'Novo domínio',
   },
 ])
 onMounted(async () => {

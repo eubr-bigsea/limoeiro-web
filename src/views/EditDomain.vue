@@ -118,7 +118,7 @@ const names = computed(() => [
     route: 'domains',
   },
   {
-    label: editing.value ? 'Edição' : 'Novo domínio',
+    label: editing.value ? state.id : 'Novo domínio',
   },
 ])
 onMounted(async () => {

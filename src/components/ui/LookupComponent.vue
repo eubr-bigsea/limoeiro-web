@@ -5,7 +5,7 @@
         v-model="searchQuery"
         type="text"
         class="form-control form-control-sm"
-        :placeholder="placeholder"
+        placeholder="Digite para buscar..."
         :disabled="!!selectedOption && !isEditing"
         ref="input"
       />
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Lista de opções -->
-    <ul v-if="options && options.length > 0 && (isEditing || !selectedOption)" class="options">
+    <ul v-if="options.length > 0 && (isEditing || !selectedOption)" class="options">
       <li
         v-for="(option, index) in options"
         :key="option[valueProperty]"
@@ -110,10 +110,7 @@ const selectedOption = computed({
     isEditing.value = false
     emit('update:modelValue', newValue)
     emit('change', newValue)
-    emit(
-      'update:value',
-      props.type === 'object' || newValue === null ? newValue : newValue[props.valueProperty],
-    )
+    emit('update:value', props.type === 'object' ? newValue : newValue[props.valueProperty])
   },
 })
 

@@ -5,11 +5,9 @@
       class="d-flex align-items-center justify-content-between py-2 my-1 border-top border-bottom"
     >
       <img
-        v-if="providerImageSrc"
         class="provider-logo me-3"
         :src="providerImageSrc"
         :alt="`Provedor do tipo ${selected?.provider_type?.display_name}`"
-        :data-id="selected?.provider_type.image"
       />
       <h2 class="m-0">{{ selected.display_name }}</h2>
       <div class="ms-auto pe-1">Provedor de banco de dados</div>
@@ -163,7 +161,7 @@ const loadProviderLogo = async () => {
       const img = await import(`@/assets/${selected.value?.provider_type.image}.svg`)
       return img.default
     } catch (ignore) {
-      console.debug('Invalid logo', ignore)
+      console.debug(ignore)
     }
   }
 }
@@ -211,7 +209,7 @@ const table = ref({ refresh: () => {} })
 const ingestionTable = ref({ refresh: () => {} })
 const { columns, options } = useVServerTable()
   .name('ingestions')
-  .columns('display_name', 'notes', 'domain', 'layer', 'deleted')
+  .columns('display_name', 'domain', 'layer', 'deleted')
   .headSkin('table-secondary')
   .headings({
     display_name: 'Nome',
@@ -219,7 +217,6 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     domain: 'Domínio',
     layer: 'Camada',
-    notes: 'Notas',
     deleted: 'Desabilitado',
   })
   .columnsClasses({ deleted: ['text-center'] })
@@ -304,7 +301,6 @@ const updateProperty = async (name, value) => {
 <style scoped>
 .provider-logo {
   width: auto;
-  max-width: 100px;
-  max-height: 48px;
+  height: 56px;
 }
 </style>

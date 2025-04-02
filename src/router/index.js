@@ -7,7 +7,6 @@ import TableView from '@/views/TableView.vue'
 import IAModelView from '@/views/IAModelView.vue'
 import DatabaseProviderView from '@/views/DatabaseProviderView.vue'
 import EditIngestion from '@/views/EditIngestion.vue'
-import AddDatabaseProvider from '@/views/AddDatabaseProvider.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,19 +57,13 @@ const router = createRouter({
       path: '/explore',
       name: 'explore',
       component: ExploreView,
-      meta: { title: 'Provedores de banco de dados' },
+      meta: { title: 'Explorar catálogo' },
       children: [
         {
           path: 'database-providers/:id',
           name: 'explore-database-providers',
           component: DatabaseProviderView,
           meta: { title: 'Provedores de dados' },
-        },
-        {
-          path: 'database-providers/add',
-          name: 'add-database-provider',
-          component: AddDatabaseProvider,
-          meta: { title: 'Provedor de dados' },
         },
         {
           path: 'database-providers/:id/ingestions/:ingestionId',

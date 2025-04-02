@@ -27,7 +27,7 @@
                 v-if="showCancelButton"
                 type="button"
                 class="btn btn-secondary"
-                @click="close(true)"
+                @click="close"
               >
                 {{ cancelButtonLabel }}
               </button>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 export default {
   name: 'ModalComponent',
@@ -72,9 +72,6 @@ export default {
       type: String,
       default: '',
     },
-    okAction: {
-      type: Function,
-    },
   },
   setup(props, { expose }) {
     const isVisible = ref(false)
@@ -84,21 +81,9 @@ export default {
       document.body.classList.add('modal-open')
     }
 
-    const close = (okClicked) => {
-      if (okClicked) {
-        let result = true
-        if (okAction.value) {
-          okAction.value()
-        }
-        if (true) {
-          emits.emits('ok')
-          isVisible.value = false
-          document.body.classList.remove('modal-open')
-        }
-      } else {
-        isVisible.value = false
-        document.body.classList.remove('modal-open')
-      }
+    const close = () => {
+      isVisible.value = false
+      document.body.classList.remove('modal-open')
     }
 
     const handleEscapeKey = (event) => {

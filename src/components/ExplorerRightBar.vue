@@ -137,6 +137,6 @@ const removeResponsibility = async (responsibility) => {
 div.right-side {
   font-size: 0.9em;
   height: 80vh;
-  xoverflow-y: scroll;
+  overflow-y: scroll;
 }
 </style>

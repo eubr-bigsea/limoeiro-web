@@ -17,7 +17,6 @@
           v-model:domain="selected.domain"
           v-model:layer="selected.layer"
           v-model:deleted="selected.deleted"
-          :notes="selected.notes"
           @update:domain="(event) => updateProperty('domain_id', event)"
           @update:layer="(event) => updateProperty('layer_id', event)"
           @update:deleted="(event) => updateProperty('deleted', event)"
@@ -62,16 +61,12 @@
                   <tr v-for="(col, i) in selected.columns" :key="col.id">
                     <td class="text-center">{{ i + 1 }}</td>
                     <td class="text-center">
-                      <LucideKeySquare v-if="col.primary_key" size="14" />
-                      <component :is="getDataType(col.data_type)" size="14" />
+                      <LucideKeySquare v-if="col.primary_key" size="12" />
                     </td>
                     <td>{{ col.name }}</td>
                     <td>{{ col.description }}</td>
                     <td v-if="showCompleteColInfo">{{ col.display_name }}</td>
-                    <td>
-                      {{ col.data_type }} {{ col.size ? `(${col.size})` : '' }}
-                      {{ col.precision ? `(${col.precision}, ${col.scale})` : '' }}
-                    </td>
+                    <td>{{ col.data_type }}{{ col.size ? `(${col.size})` : '' }}</td>
                     <td class="text-center">
                       {{ col.nullable ? 'Sim' : 'Não' }}
                     </td>
@@ -110,13 +105,7 @@
   </div>
 </template>
 <script setup>
-import {
-  LucideDollarSign,
-  LucideEye,
-  LucideImage,
-  LucideKeySquare,
-  LucideTable2,
-} from 'lucide-vue-next'
+import { LucideEye, LucideKeySquare, LucideTable2 } from 'lucide-vue-next'
 import { inject, computed, ref } from 'vue'
 import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import TabComponent from '@/components/ui/TabComponent.vue'
@@ -126,56 +115,6 @@ import ExplorerRightBar from '@/components/ExplorerRightBar.vue'
 import { useUpdateAssetProperty } from '@/composables/useUpdateAssetProperty'
 
 import TableSampleDisplay from '@/components/TableSampleDisplay.vue'
-import { LucideCalendarClock, LucideCaseUpper, LucideBinary, LucideHash } from 'lucide-vue-next'
-
-const SQLTYPES_DICT = new Map([
-  ['VARBINARY', 'BINARY'],
-  ['BIT', 'BINARY'],
-  ['DATE', 'DATE'],
-  ['BIG_INTEGER', 'NUMBER'],
-  ['BLOB', 'BINARY'],
-  ['CHAR', 'CHAR'],
-  ['DECIMAL', 'NUMBER'],
-  ['ARRAY', 'CHAR'],
-  ['BIGINT', 'NUMBER'],
-  ['STRING', 'CHAR'],
-  ['REAL', 'NUMBER'],
-  ['DATETIME', 'DATE'],
-  ['VARCHAR', 'CHAR'],
-  ['TIMESTAMP', 'DATE'],
-  ['NULL', 'CHAR'],
-  ['JSON', 'CHAR'],
-  ['BINARY', 'BINARY'],
-  ['ENUM', 'CHAR'],
-  ['INTEGER', 'NUMBER'],
-  ['INT', 'NUMBER'],
-  ['BOOLEAN', 'CHAR'],
-  ['SMALLINT', 'NUMBER'],
-  ['NUMERIC', 'NUMBER'],
-  ['SMALL_INTEGER', 'NUMBER'],
-  ['TIME', 'DATE'],
-  ['CLOB', 'BINARY'],
-  ['FLOAT', 'NUMBER'],
-  ['TEXT', 'CHAR'],
-  ['NVARCHAR', 'CHAR'],
-  ['NCHAR', 'CHAR'],
-  ['NTEXT', 'CHAR'],
-  ['TINYINT', 'NUMBER'],
-  ['MONEY', 'MONEY'],
-  ['LARGE_BINARY', 'BINARY'],
-  ['LONGTEXT', 'CHAR'],
-  ['TINYTEXT', 'CHAR'],
-  ['IMAGE', 'IMAGE'],
-])
-const iconMap = {
-  DATE: LucideCalendarClock,
-  CHAR: LucideCaseUpper,
-  BINARY: LucideBinary,
-  NUMBER: LucideHash,
-  MONEY: LucideDollarSign,
-  IMAGE: LucideImage,
-}
-const getDataType = (type) => iconMap[SQLTYPES_DICT.get(type)]
 
 defineProps(['id'])
 const selected = inject('selected')

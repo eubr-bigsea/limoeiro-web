@@ -118,7 +118,7 @@ const names = computed(() => [
     route: 'layers',
   },
   {
-    label: editing.value ? 'Edição' : 'Nova camada',
+    label: editing.value ? state.name : 'Nova camada',
   },
 ])
 onMounted(async () => {
