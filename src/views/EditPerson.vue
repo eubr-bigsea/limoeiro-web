@@ -222,11 +222,11 @@ const handleSave = async () => {
 }
 const names = computed(() => [
   {
-    label: 'Domínios',
+    label: 'Pessoas',
     route: 'people',
   },
   {
-    label: editing.value ? state.id : 'Novo domínio',
+    label: editing.value ? 'Edição' : 'Nova pessoa',
   },
 ])
 const retrieveOptions = async (query) => {

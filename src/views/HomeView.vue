@@ -1,6 +1,5 @@
 <script setup>
 import {
-  LucideChartArea,
   LucideDatabase,
   LucideInfo,
   LucideLineChart,
@@ -8,7 +7,6 @@ import {
   LucideTable2,
   LucideUsers,
 } from 'lucide-vue-next'
-import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>

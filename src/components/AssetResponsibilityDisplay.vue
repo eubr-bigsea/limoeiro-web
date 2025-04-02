@@ -91,6 +91,7 @@ import LoadingIndicator from './ui/LoadingIndicator.vue'
 import DropdownLink from './ui/DropdownLink.vue'
 import { useFetch } from '@/composables/useFetch'
 import LookupComponent from './ui/LookupComponent.vue'
+import { getContacts } from '@/services/contact'
 
 const props = defineProps({
   title: { type: String, required: false, default: 'Responsabilidade' },
@@ -152,8 +153,7 @@ const remove = (item) => {
 }
 
 const retrieveContacts = async (query) => {
-  const { data, fetchData, error } = useFetch(`/contacts/?sort_by=name&query=${query}`)
-  await fetchData()
-  return data.value.items
+  const { contacts, error } = await getContacts(query)
+  return contacts
 }
 </script>

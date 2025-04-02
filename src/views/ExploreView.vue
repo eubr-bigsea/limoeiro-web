@@ -2,72 +2,70 @@
   <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-12 col-lg-12 pe-0">
+        <div class="col-md-12 col-lg-12">
           <router-view v-slot="{ Component }">
             <transition v-if="Component" name="fade" mode="out-in">
               <component :is="Component" />
             </transition>
             <template v-else>
-              <div class="my-4 row">
-                <div class="col-6">
-                  <h2>Provedores de bancos de dados</h2>
-                  <v-server-table :options="options" :columns="columns">
-                    <template #actions>
-                      <row-list-action-buttons />
-                    </template>
-                    <template #domain="props">
-                      <router-link
-                        v-if="props.row.domain"
-                        :to="{ name: 'edit-domain', params: { id: props.row.domain.id } }"
-                      >
-                        {{ props.row.domain.name }}
-                      </router-link>
-                    </template>
-                    <template #layer="props">
-                      <router-link v-if="props.row.layer" :to="{ name: 'layers' }">
-                        {{ props.row.layer.name }}
-                      </router-link>
-                    </template>
-                    <template #type="props">
-                      {{ props.row.provider_type.display_name }}
-                    </template>
-                    <template #display_name="props">
-                      <router-link
-                        :to="{ name: 'explore-database-providers', params: { id: props.row.id } }"
-                      >
-                        {{ props.row.display_name }}
-                      </router-link>
-                    </template>
-                  </v-server-table>
-                </div>
-                <div class="col-6">
-                  <h5>Modelos de Inteligência Artificial</h5>
-                  <v-server-table v-if="false" :options="modelOptions" :columns="modelColumns">
-                    <template #actions>
-                      <row-list-action-buttons />
-                    </template>
-                    <template #domain="props">
-                      <router-link
-                        v-if="props.row.domain"
-                        :to="{ name: 'edit-domain', params: { id: props.row.domain.id } }"
-                      >
-                        {{ props.row.domain.name }}
-                      </router-link>
-                    </template>
-                    <template #layer="props">
-                      <router-link v-if="props.row.layer" :to="{ name: 'layers' }">
-                        {{ props.row.layer.display_name }}
-                      </router-link>
-                    </template>
-                    <template #display_name="props">
-                      <router-link
-                        :to="{ name: 'explore-ia-models', params: { id: props.row.id } }"
-                      >
-                        {{ props.row.display_name }}
-                      </router-link>
-                    </template>
-                  </v-server-table>
-                </div>
+              <bread-crumb :items="names" />
+              <list-view-header :title="route.meta.title" @add="handleAdd" />
+
+              <div class="col-12">
+                <v-server-table :options="options" :columns="columns">
+                  <template #actions>
+                    <row-list-action-buttons />
+                  </template>
+                  <template #domain="props">
+                    <router-link
+                      v-if="props.row.domain"
+                      :to="{ name: 'edit-domain', params: { id: props.row.domain.id } }"
+                    >
+                      {{ props.row.domain.name }}
+                    </router-link>
+                  </template>
+                  <template #layer="props">
+                    <router-link v-if="props.row.layer" :to="{ name: 'layers' }">
+                      {{ props.row.layer.name }}
+                    </router-link>
+                  </template>
+                  <template #type="props">
+                    {{ props.row.provider_type.display_name }}
+                  </template>
+                  <template #display_name="props">
+                    <router-link
+                      :to="{ name: 'explore-database-providers', params: { id: props.row.id } }"
+                    >
+                      {{ props.row.display_name }}
+                    </router-link>
+                  </template>
+                </v-server-table>
+              </div>
+              <div v-if="false" class="col-6">
+                <h5>Modelos de Inteligência Artificial</h5>
+                <v-server-table v-if="false" :options="modelOptions" :columns="modelColumns">
+                  <template #actions>
+                    <row-list-action-buttons />
+                  </template>
+                  <template #domain="props">
+                    <router-link
+                      v-if="props.row.domain"
+                      :to="{ name: 'edit-domain', params: { id: props.row.domain.id } }"
+                    >
+                      {{ props.row.domain.name }}
+                    </router-link>
+                  </template>
+                  <template #layer="props">
+                    <router-link v-if="props.row.layer" :to="{ name: 'layers' }">
+                      {{ props.row.layer.display_name }}
+                    </router-link>
+                  </template>
+                  <template #display_name="props">
+                    <router-link :to="{ name: 'explore-ia-models', params: { id: props.row.id } }">
+                      {{ props.row.display_name }}
+                    </router-link>
+                  </template>
+                </v-server-table>
               </div>
             </template>
           </router-view>
@@ -78,47 +76,39 @@
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch.js'
-import { ref, provide, watch, onMounted, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, provide, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import VServerTable from '@/components/VServerTable.vue'
 import RowListActionButtons from '@/components/ui/RowListActionButtons.vue'
 import { useVServerTable } from '@/composables/useVServerTable.js'
-
+import BreadCrumb from '@/components/ui/BreadCrumb.vue'
+import ListViewHeader from '@/components/ui/ListViewHeader.vue'
 const route = useRoute()
-const databaseProviders = ref()
-const databases = ref()
-const schemas = ref()
-const tables = ref()
+const router = useRouter()
+
+const names = ref([
+  {
+    label: 'Explorar',
+    route: 'provider',
+  },
+])
 
 const getData = (url) => {
   return useFetch(url)
 }
 
-const tree = ref([])
 const selected = ref()
-const handleUpdate = async (level, key) => {
-  if (level === 0) {
-    const { data, fetchData } = getData('/database-providers/')
-    await fetchData()
-    databaseProviders.value = data.value
 
-    tree.value = databaseProviders.value.items.map((provider) => ({
-      id: provider.id,
-      label: provider.display_name,
-      route: 'explore-databases-provider',
-      type: provider.provider_type.id,
-    }))
-  }
-}
 const updateAfterRouteChange = async (newRoute, updateSelected, updateParents) => {
   // This is called when the route changes
   const [child, id] = newRoute.split('/').slice(-2)
   if (
-    child === 'database-providers' ||
-    child === 'databases' ||
-    child === 'schemas' ||
-    child === 'tables' ||
-    child === 'ia-models'
+    (child === 'database-providers' ||
+      child === 'databases' ||
+      child === 'schemas' ||
+      child === 'tables' ||
+      child === 'ia-models') &&
+    id !== 'add'
   ) {
     selected.value = null
     const { data, error, isLoading, fetchData } = getData(`/${child}/${id}`)
@@ -144,12 +134,18 @@ onMounted(async () => {
 provide('selected', selected) // Provide the `selected` state to children
 
 const loadProviders = async (options) => {
-  const { data, fetchData } = useFetch(
-    `/database-providers/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
-  )
+  const queryParams = {
+    query: options.query || '',
+    sort_by: options.orderBy,
+    sort_order: options.ascending ? 'asc' : 'desc',
+    page: options.page,
+  }
+  const url = `/database-providers/?${new URLSearchParams(queryParams).toString()}`
+  const { data, fetchData } = useFetch(url)
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
+
 const { columns, options } = useVServerTable()
   //.filterable('id')
   .columns('display_name', 'domain', 'type')
@@ -189,6 +185,10 @@ const { columns: modelColumns, options: modelOptions } = useVServerTable()
   .filterable('query')
   .sortable('display_name')
   .build()
+
+const handleAdd = async () => {
+  router.push({ name: 'add-database-provider' })
+}
 </script>
 <style scoped>
 @keyframes spin {

@@ -16,6 +16,7 @@
           v-model:domain="selected.domain"
           v-model:layer="selected.layer"
           v-model:deleted="selected.deleted"
+          :notes="selected.notes"
           @update:domain="(event) => updateProperty('domain_id', event)"
           @update:layer="(event) => updateProperty('layer_id', event)"
           @update:deleted="(event) => updateProperty('deleted', event)"
@@ -42,7 +43,12 @@
               </router-link>
             </template>
             <template #display_name="props">
-              <router-link :to="{ name: 'explore-tables', params: { id: props.row.id } }">
+              <LucideTable2 v-if="props.row.type == 'REGULAR'" size="15" color="navy" />
+              <LucideEye v-if="props.row.type == 'VIEW'" size="15" color="navy" />
+              <router-link
+                class="ms-1"
+                :to="{ name: 'explore-tables', params: { id: props.row.id } }"
+              >
                 {{ props.row.display_name }}
               </router-link>
             </template>
@@ -56,7 +62,7 @@
   </div>
 </template>
 <script setup>
-import { LucideFolder } from 'lucide-vue-next'
+import { LucideFolder, LucideTable2, LucideEye } from 'lucide-vue-next'
 import { inject, computed } from 'vue'
 import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import { useFetch } from '@/composables/useFetch.js'
