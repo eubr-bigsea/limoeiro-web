@@ -106,3 +106,23 @@ h6 {
   xheight: 80vh;
   xpadding: 0 2px;
 }
+
+/* Cron editor */
+:not(.vcron-select-disabled).vcron-select-input {
+  background-color: #b0e0ca !important;
+}
+.vcron-select-input {
+  display: inline;
+  border-radius: 3px;
+  border: 1px solid #b0e0ca !important;
+  -webkit-user-select: none;
+  user-select: none;
+  padding: 0 0.5em;
+  color: #222 !important;
+}
+.vcron-select-list {
+  background-color: #fff !important;
+  border: 1px solid #eee !important;
+  font-size: 0.9em !important;
+}
+/**/

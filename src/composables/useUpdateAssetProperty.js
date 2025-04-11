@@ -6,8 +6,11 @@ export function useUpdateAssetProperty(assetPath) {
   const asset = ref(null)
   const update = async (property, value) => {
     const url = `/${assetPath}/${asset.value.id}`
+
     if (value === undefined) {
       value = null
+    } else if (property !== 'deleted' && property != 'description') {
+      value = value.id
     }
     const { data, error, fetchData } = useFetch(url, {
       method: 'PATCH',

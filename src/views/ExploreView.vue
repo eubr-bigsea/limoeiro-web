@@ -157,7 +157,7 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     domain: 'Domínio',
     layer: 'Camada',
-    provider_type: 'Tipo',
+    type: 'Tipo',
   })
   .filterable('query')
   .sortable('display_name')

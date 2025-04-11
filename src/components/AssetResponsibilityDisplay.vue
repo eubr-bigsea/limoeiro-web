@@ -5,6 +5,7 @@
       v-if="!editing && !loading"
       class="btn btn-success py-0 px-0 position-absolute top-0 end-0 rounded-circle me-1 float-end"
       @click="add"
+      title="Adicionar"
     >
       <LucidePlus size="25px" />
     </button>

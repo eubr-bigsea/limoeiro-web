@@ -145,6 +145,9 @@
             </div> -->
               <div class="float-end ms-auto">
                 <button class="btn btn-sm btn-success" @click="search">Pesquisar</button>
+                <button class="btn btn-sm btn-secondary ms-2" @click="clearFilters">
+                  Limpar filtros
+                </button>
               </div>
             </div>
           </template>
@@ -180,6 +183,9 @@
           </template>
           <template #layer="props">
             {{ props.row.layer?.name }}
+          </template>
+          <template #updated_at="props">
+            {{ $formatDateHourSeconds(props.row.updated_at) }}
           </template>
           <template #hierarchy="props">
             <span v-if="props.row.asset_type === 'provider'" class="me-2">
@@ -241,9 +247,7 @@
 </template>
 <script setup>
 import BreadCrumb from '@/components/ui/BreadCrumb.vue'
-import DropdownComponent from '@/components/ui/DropdownComponent.vue'
 import ListViewHeader from '@/components/ui/ListViewHeader.vue'
-import LookupComponent from '@/components/ui/LookupComponent.vue'
 import SelectableList from '@/components/ui/SelectableList.vue'
 import VServerTable from '@/components/VServerTable.vue'
 import { useFetch } from '@/composables/useFetch'
@@ -328,7 +332,16 @@ const loadAssets = async (options) => {
 
 const { columns, options } = useVServerTable()
   .name('layers')
-  .columns('asset_type', 'name', 'hierarchy', 'description', 'domain', 'layer', 'deleted')
+  .columns(
+    'asset_type',
+    'name',
+    'hierarchy',
+    'description',
+    'domain',
+    'layer',
+    'deleted',
+    'updated_at',
+  )
   .headSkin('table-secondary fw-bold')
   .headings({
     //display_name: 'Nome de exibição',
@@ -337,11 +350,14 @@ const { columns, options } = useVServerTable()
     deleted: 'Desabilitado',
     asset_type: 'Tipo',
     hierarchy: 'Hierarquia',
+    domain: 'Domínio',
+    layer: 'Camada',
+    updated_at: 'Atualizado em',
   })
   .saveState(true)
   .requestFunction(loadAssets)
   .filterable('query')
-  .sortable('name', 'display_name', 'asset_type')
+  .sortable('name', 'display_name', 'asset_type', 'updated_at')
   .skin('table table-bordered table-sm table-hover align-middle')
   .columnsStyles({ actions: { width: '100px', 'text-align': 'center', background: 'red' } })
   .columnsClasses({
@@ -376,6 +392,31 @@ const search = async () => {
     asset_type: types.value,
     responsible_ids: responsibles.value,
     tag_ids: tags.value,
+  })
+}
+const clearFilters = () => {
+  query.value = ''
+  types.value = []
+  domains.value = []
+  responsibles.value = []
+  tags.value = []
+  layers.value = []
+  display.value = [{ id: 'A', name: 'Exibir' }]
+  listing.value.setCurrentPage(1)
+  listing.value.setFilter('', {
+    layer_id: [],
+    domain_id: [],
+    asset_type: [],
+    responsible_ids: [],
+    tag_ids: [],
+    display: 'A',
+  })
+  listing.value.persist({
+    layer_id: [],
+    domain_id: [],
+    asset_type: [],
+    responsible_ids: [],
+    tag_ids: [],
   })
 }
 const loadedQueryResults = (params, persistedData) => {

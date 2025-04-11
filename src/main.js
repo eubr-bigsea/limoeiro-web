@@ -11,6 +11,9 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+import '@vue-js-cron/light/dist/light.css'
+import CronLightPlugin from '@vue-js-cron/light'
+
 const formatDate = (dateString) => {
   return new Intl.DateTimeFormat('pt-BR').format(new Date(dateString))
 }
@@ -21,11 +24,21 @@ function formatDateHour(dateString) {
 
   return format.format(date)
 }
+function formatDateHourSeconds(dateString) {
+  const date = new Date(dateString)
+
+  const format = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' })
+
+  return format.format(date)
+}
 
 const app = createApp(App)
 
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$formatDateHour = formatDateHour
+app.config.globalProperties.$formatDateHourSeconds = formatDateHourSeconds
+
+app.use(CronLightPlugin)
 
 // Prevents toasts of the same type from appearing simultaneously, discarding duplicates
 const filterBeforeCreate = (toast, toasts) => {

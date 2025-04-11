@@ -103,6 +103,9 @@
                     }"
                     @delete="handleDeleteIngestion"
                   />
+                  <button class="btn btn-outline-success ms-1 btn-sm rounded-5" @click="execute">
+                    <LucidePlay size="15" fill="green" />
+                  </button>
                 </template>
                 <template #deleted="props">
                   {{ props.row.deleted ? 'Não' : 'Sim' }}
@@ -129,11 +132,16 @@
         <ExplorerRightBar :asset-id="route.params.id" />
       </div>
     </div>
+    <confirmation-dialog
+      ref="executeConfirmation"
+      message="Deseja realmente executar este processo de ingestão?"
+      @confirmed="handleConfirmed"
+    />
   </div>
 </template>
 
 <script setup>
-import { LucidePlusCircle } from 'lucide-vue-next'
+import { LucidePlay, LucidePlusCircle } from 'lucide-vue-next'
 import { inject, watchEffect, computed, ref, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
@@ -150,6 +158,7 @@ import ExplorerHeader from '@/components/ExplorerHeader.vue'
 import ExplorerRightBar from '@/components/ExplorerRightBar.vue'
 import { onMounted } from 'vue'
 import { useUpdateAssetProperty } from '@/composables/useUpdateAssetProperty'
+import ConfirmationDialog from '@/components/ui/ConfirmationDialog.vue'
 
 const selected = inject('selected')
 const props = defineProps(['id'])
@@ -230,8 +239,8 @@ const { columns, options } = useVServerTable()
 
 const tabList = [
   { title: 'Bancos de dados', slotName: 'databases' },
-  { title: 'Processos de ingestão', slotName: 'ingestions' },
   { title: 'Conexão', slotName: 'connection' },
+  { title: 'Processos de ingestão', slotName: 'ingestions' },
 ]
 
 /* Ingestions */
@@ -297,8 +306,14 @@ const loadConnection = async () => {
 const { asset, update } = useUpdateAssetProperty('database-providers')
 const updateProperty = async (name, value) => {
   asset.value = selected.value
-  await update(name, name !== 'deleted' ? value?.id : value)
+  await update(name, value)
 }
+
+const executeConfirmation = ref()
+const execute = async () => {
+  executeConfirmation.value.show()
+}
+const handleConfirmed = () => {}
 </script>
 
 <style scoped>

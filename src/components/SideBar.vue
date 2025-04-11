@@ -127,6 +127,7 @@
             <span class="menu-text">Usuários</span>
           </router-link>
         </li>
+        <!--
         <li class="nav-item">
           <a class="nav-link text-white" href="#" aria-label="Editar configurações">
             <div class="icon-wrapper">
@@ -135,6 +136,7 @@
             <span class="menu-text">Configurações</span>
           </a>
         </li>
+      -->
         <li class="nav-item">
           <a class="nav-link text-white" href="#" aria-label="Sair, encerrando a sessão do usuário">
             <div class="icon-wrapper">

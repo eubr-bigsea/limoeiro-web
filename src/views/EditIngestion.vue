@@ -4,185 +4,217 @@
     <div class="d-flex justify-content-between my-2 border-top border-bottom py-1">
       <h2>{{ route.meta.title }}</h2>
     </div>
-    <form @submit.prevent="submitForm" class="px-2 row">
-      <div class="col-md-4 col-lg-3">
-        <text-input
-          name="name"
-          label="Nome"
-          v-model="state.name"
-          :rules="v$.name"
-          maxlength="50"
-          required
-        />
-      </div>
+    <div class="row">
+      <div class="col-9">
+        <form @submit.prevent="submitForm" class="px-2 row">
+          <div class="col-md-4 col-lg-3">
+            <text-input
+              name="name"
+              label="Nome"
+              v-model="state.name"
+              :rules="v$.name"
+              maxlength="50"
+              required
+            />
+          </div>
 
-      <div class="col-md-4 col-lg-3">
-        <select-input
-          name="type"
-          label="Tipo"
-          v-model="state.type"
-          :rules="v$.type"
-          :options="[
-            { value: 'ingestion', label: 'Ingestão' },
-            { value: 'profiling', label: 'Análise estatística' },
-          ]"
-          :include-empty="false"
-        />
-      </div>
+          <div class="col-md-4 col-lg-3">
+            <select-input
+              name="type"
+              label="Tipo"
+              v-model="state.type"
+              :rules="v$.type"
+              :options="[
+                { value: 'ingestion', label: 'Ingestão' },
+                { value: 'profiling', label: 'Análise estatística' },
+              ]"
+              :include-empty="false"
+            />
+          </div>
 
-      <div class="col-md-4 col-lg-3">
-        <select-input
-          name="override_mode"
-          label="O que fazer se objeto existir"
-          v-model="state.override_mode"
-          :rules="v$.override_mode"
-          :options="[
-            { value: 'override', label: 'Substituir' },
-            { value: 'ignore', label: 'Ignorar' },
-            { value: 'merge', label: 'Mesclar' },
-          ]"
-        />
+          <div class="col-md-4 col-lg-3">
+            <select-input
+              name="override_mode"
+              label="O que fazer se objeto existir"
+              v-model="state.override_mode"
+              :rules="v$.override_mode"
+              :options="[
+                { value: 'override', label: 'Substituir' },
+                { value: 'ignore', label: 'Ignorar' },
+                { value: 'merge', label: 'Mesclar' },
+              ]"
+            />
+          </div>
+          <div class="col-md-12 col-lg-3 mb-1">
+            <div class="form-check form-switch mt-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="deleted"
+                v-model="state.deleted"
+              />
+              <label class="form-check-label" for="deleted">Desabilitado</label>
+            </div>
+          </div>
+
+          <div class="col-12 mt-4">
+            <h6>Padrões para seleção de banco de dados</h6>
+          </div>
+          <div class="col-md-6 col-lg-6">
+            <text-input
+              name="include_database"
+              label="Incluir bancos de dados (regex)"
+              v-model="state.include_database"
+              :rules="v$.include_database"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-md-6 col-lg-6">
+            <text-input
+              name="exclude_database"
+              label="Excluir bancos de dados (regex)"
+              v-model="state.exclude_database"
+              :rules="v$.exclude_database"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-12 mt-4">
+            <h6>Padrões para seleção de esquema</h6>
+          </div>
+          <div class="col-md-6 col-lg-6">
+            <text-input
+              name="include_schema"
+              label="Incluir esquemas (regex)"
+              v-model="state.include_schema"
+              :rules="v$.include_schema"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-md-6 col-lg-6">
+            <text-input
+              name="exclude_schema"
+              label="Excluir esquemas (regex)"
+              v-model="state.exclude_schema"
+              :rules="v$.exclude_schema"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-12 mt-4">
+            <h6>Padrões para seleção de tabelas</h6>
+          </div>
+          <div class="col-md-4 col-lg-4">
+            <text-input
+              name="include_table"
+              label="Incluir tabelas (regex)"
+              v-model="state.include_table"
+              :rules="v$.include_table"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-md-4 col-lg-4">
+            <text-input
+              name="exclude_table"
+              label="Excluir tabelas (regex)"
+              v-model="state.exclude_table"
+              :rules="v$.exclude_table"
+              maxlength="50"
+              :display-error="false"
+            />
+          </div>
+          <div class="col-md-4 col-lg-4">
+            <div class="form-check form-switch mt-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="include_view"
+                v-model="state.include_view"
+              />
+              <label class="form-check-label" for="include_view">Incluir views (visões)</label>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3 my-1">
+            <text-input
+              name="retries"
+              label="Tentativas"
+              v-model="state.retries"
+              :rules="v$.retries"
+              maxlength="2"
+              type="number"
+              max="20"
+              min="1"
+              :display-error="true"
+            />
+          </div>
+
+          <!-- <div class="bg-info my-4">Form is invalid ?{{ v$.$invalid }} {{ v$.$anyDirty }}</div>
+          <div class="bg-info my-4">
+            {{ v$.name.$errors }}
+            {{ v$.name.$dirty }}
+            {{ v$.$errors }}
+            <br />
+            Error |{{ v$.$dirty }} | Dirty {{ v$.$pending }} | Invalid {{ v$.$invalid }}
+            {{ state }}
+          </div> -->
+
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-success btn-sm me-1 px-4"
+              :disabled="v$.$invalid"
+              @click="handleSave"
+            >
+              <LucideSave size="16px" />
+              Salvar
+            </button>
+            <router-link
+              class="btn btn-secondary btn-sm px-4"
+              :to="{
+                name: 'explore-database-providers',
+                params: { id: route.params.id },
+                query: { tab: 2 },
+              }"
+            >
+              Cancelar
+            </router-link>
+          </div>
+        </form>
       </div>
-      <div class="col-md-12 col-lg-3 mb-1">
-        <div class="form-check form-switch mt-4">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            role="switch"
-            id="deleted"
-            v-model="state.deleted"
-          />
-          <label class="form-check-label" for="deleted">Desabilitado</label>
+      <div class="col-3 border-start">
+        <label class="fw-bold mb-2">Agendamento</label>
+        <!--
+          <CrontabEditor v-model="state.scheduling_type" format="quartz" />
+          -->
+        <select v-model="state.scheduling_type" class="form-select form-select-sm">
+          <option value="manual">Disparo manual</option>
+          <option value="cron">Recorrente</option>
+        </select>
+        {{ state.scheduling_type }}
+        <div v-if="state.scheduling_type === 'cron'">
+          <div>
+            <cron-light
+              v-model="state.value"
+              @error="state.error = $event"
+              locale="pt"
+            ></cron-light>
+            <div class="mt-3">
+              <label>Expressão</label>
+              <input type="text" class="form-control form-control-sm" v-model="state.value" />
+              <div v-if="state.error" class="mt-3">
+                Expressão inválida
+                <div class="badge bg-danger fw-normal mt-1">{{ state.error }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="col-12 mt-4">
-        <h6>Padrões para seleção de banco de dados</h6>
-      </div>
-      <div class="col-md-6 col-lg-6">
-        <text-input
-          name="include_database"
-          label="Incluir bancos de dados (regex)"
-          v-model="state.include_database"
-          :rules="v$.include_database"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-md-6 col-lg-6">
-        <text-input
-          name="exclude_database"
-          label="Excluir bancos de dados (regex)"
-          v-model="state.exclude_database"
-          :rules="v$.exclude_database"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-12 mt-4">
-        <h6>Padrões para seleção de esquema</h6>
-      </div>
-      <div class="col-md-6 col-lg-6">
-        <text-input
-          name="include_schema"
-          label="Incluir esquemas (regex)"
-          v-model="state.include_schema"
-          :rules="v$.include_schema"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-md-6 col-lg-6">
-        <text-input
-          name="exclude_schema"
-          label="Excluir esquemas (regex)"
-          v-model="state.exclude_schema"
-          :rules="v$.exclude_schema"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-12 mt-4">
-        <h6>Padrões para seleção de tabelas</h6>
-      </div>
-      <div class="col-md-4 col-lg-4">
-        <text-input
-          name="include_table"
-          label="Incluir tabelas (regex)"
-          v-model="state.include_table"
-          :rules="v$.include_table"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-md-4 col-lg-4">
-        <text-input
-          name="exclude_table"
-          label="Excluir tabelas (regex)"
-          v-model="state.exclude_table"
-          :rules="v$.exclude_table"
-          maxlength="50"
-          :display-error="false"
-        />
-      </div>
-      <div class="col-md-4 col-lg-4">
-        <div class="form-check form-switch mt-4">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            role="switch"
-            id="include_view"
-            v-model="state.include_view"
-          />
-          <label class="form-check-label" for="include_view">Incluir views (visões)</label>
-        </div>
-      </div>
-      <div class="col-md-4 col-lg-3 my-1">
-        <text-input
-          name="retries"
-          label="Tentativas"
-          v-model="state.retries"
-          :rules="v$.retries"
-          maxlength="2"
-          type="number"
-          max="20"
-          min="1"
-          :display-error="true"
-        />
-      </div>
-
-      <!-- <div class="bg-info my-4">Form is invalid ?{{ v$.$invalid }} {{ v$.$anyDirty }}</div>
-      <div class="bg-info my-4">
-        {{ v$.name.$errors }}
-        {{ v$.name.$dirty }}
-        {{ v$.$errors }}
-        <br />
-        Error |{{ v$.$dirty }} | Dirty {{ v$.$pending }} | Invalid {{ v$.$invalid }}
-        {{ state }}
-      </div> -->
-
-      <div class="col-12">
-        <button
-          type="submit"
-          class="btn btn-success btn-sm me-1 px-4"
-          :disabled="v$.$invalid"
-          @click="handleSave"
-        >
-          <LucideSave size="16px" />
-          Salvar
-        </button>
-        <router-link
-          class="btn btn-secondary btn-sm px-4"
-          :to="{
-            name: 'explore-database-providers',
-            params: { id: route.params.id },
-            query: { tab: 1 },
-          }"
-        >
-          Cancelar
-        </router-link>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 <script setup>
@@ -197,6 +229,7 @@ import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import ErrorDisplay from '@/components/ui/ErrorDisplay.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import TextInput from '@/components/ui/TextInput.vue'
+import CrontabEditor from '@/components/ui/CrontabEditor.vue'
 
 const toast = useToast()
 const route = useRoute()
@@ -233,6 +266,10 @@ const state = reactive({
   deleted: false,
   include_view: true,
   provider_id: route.params.id,
+  scheduling: '* * * * *', // Default crontab value
+  value: '* * * * *',
+  error: '',
+  scheduling_type: null,
 })
 
 const v$ = useVuelidate(rules, state)

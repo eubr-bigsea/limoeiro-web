@@ -235,6 +235,6 @@ const showCompleteColInfo = ref(false)
 const { asset, update } = useUpdateAssetProperty('tables')
 const updateProperty = async (name, value) => {
   asset.value = selected.value
-  await update(name, name !== 'deleted' ? value?.id : value)
+  await update(name, value)
 }
 </script>

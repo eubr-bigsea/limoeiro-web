@@ -33,7 +33,6 @@
             <a href="#" class="ms-2" @click.prevent="selectAll">Todos</a>
           </li>
           <li
-            v-if="items.length > 0"
             v-for="item in items"
             :key="item[keyProp]"
             class="dropdown-item px-2 py-1 overflow-hidden"
@@ -51,19 +50,12 @@
               <slot :item="item">{{ item[valueProp] }}</slot>
             </label>
           </li>
-          <li v-else-if="searchQuery != ''" class="dropdown-item px-2 py-1 overflow-hidden">
-            A busca não retornou registros
-          </li>
-          <li v-else class="dropdown-item px-2 py-1 overflow-hidden">
-            Digite para iniciar a busca
-          </li>
         </ul>
       </div>
 
       <!-- Previously Selected Items -->
       <div v-if="mode === 'search'" class="p-2 border-start">
-        <span v-if="!selectedItems.length > 0">nada selecionado</span>
-        <strong v-else>Selecionado(s)</strong>
+        <span v-if="!selectedItems.length > 0">Nenhum item selecionado</span>
         <ul class="list-unstyled mb-0">
           <li
             v-for="item in selectedItems"
@@ -111,7 +103,7 @@ const emit = defineEmits(['update:modelValue', 'search'])
 const searchQuery = ref('')
 const debouncedSearch = debounce(() => {
   emit('search', searchQuery.value)
-}, 500)
+}, 300)
 
 const selectedItems = computed(() => props.modelValue)
 

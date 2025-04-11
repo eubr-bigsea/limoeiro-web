@@ -91,6 +91,14 @@
           <LucideSave size="16px" />
           Salvar
         </button>
+        <button
+          type="submit"
+          class="btn btn-outline-secondary btn-sm me-1 px-4"
+          :disabled="v$.$invalid"
+        >
+          <LucideUnplug size="20px" color="navy" />
+          Testar conexão (FIXME)
+        </button>
       </div>
     </form>
   </div>
@@ -100,7 +108,7 @@ import { reactive, defineProps } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, integer, minValue } from '@vuelidate/validators'
 import { useFetch } from '@/composables/useFetch.js'
-import { LucideSave } from 'lucide-vue-next'
+import { LucideSave, LucideUnplug } from 'lucide-vue-next'
 import { useToast } from 'vue-toastification'
 
 import TextInput from '@/components/ui/TextInput.vue'

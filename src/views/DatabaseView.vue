@@ -272,7 +272,7 @@ const { columns: columnsTables, options: optionsTables } = useVServerTable()
 const { asset, update } = useUpdateAssetProperty('databases')
 const updateProperty = async (name, value) => {
   asset.value = selected.value
-  await update(name, name !== 'deleted' ? value?.id : value)
+  await update(name, value)
 }
 </script>
 <style scoped>

@@ -45,7 +45,7 @@ const cancel = () => {
 const save = () => {
   if (editableText.value !== props.modelValue) {
     emit('update:modelValue', editableText.value)
-    emit('change', editableText.value) // 🔹 Emite o evento de mudança
+    emit('change', editableText.value)
   }
   isEditing.value = false
 }
