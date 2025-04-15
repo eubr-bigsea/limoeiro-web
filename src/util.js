@@ -52,3 +52,13 @@ export function createQueryString(obj) {
 
   return params.toString()
 }
+
+export function createRandomId(len = 4) {
+  const array = new Uint8Array(len)
+  crypto.getRandomValues(array)
+  return Array.from(array, (byte) => ('0' + (byte % 36).toString(36)).slice(-1)).join('')
+}
+
+export function jsonReplacer(key, value) {
+  return value === null ? undefined : value
+}
