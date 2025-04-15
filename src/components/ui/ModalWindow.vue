@@ -115,7 +115,7 @@ export default {
       document.removeEventListener('keydown', handleEscapeKey)
     })
 
-    expose({ show })
+    expose({ show, close })
 
     return {
       isVisible,

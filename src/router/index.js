@@ -206,6 +206,12 @@ const router = createRouter({
       component: () => import('@/views/EditUser.vue'),
       meta: { title: 'Editar usuário' },
     },
+    {
+      path: '/ai-models/add',
+      name: 'add-ai-models',
+      component: () => import('@/views/EditAIModel.vue'),
+      meta: { title: 'Adicionar modelo de IA' },
+    },
   ],
 })
 
