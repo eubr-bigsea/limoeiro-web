@@ -6,12 +6,14 @@
       <template #actions="props">
         <row-list-action-buttons
           :row="props.row"
-          :edit-link="{
-            name: 'edit-user',
-            params: { id: props.row.id },
-          }"
           @delete="handleDelete"
         />
+      </template>
+      <template #all_user="props">
+        {{ props.row.all_user ? 'Sim' : 'Não' }}
+      </template>
+      <template #system="props">
+        {{ props.row.system ? 'Sim' : 'Não' }}
       </template>
       <template #deleted="props">
         {{ props.row.deleted ? 'Sim' : 'Não' }}
@@ -33,25 +35,28 @@ import { useFetchResponseHandler } from '@/composables/useFetchResponseHandler'
 const router = useRouter()
 const { handleFetchResponse } = useFetchResponseHandler()
 
-const loadLayers = async (options) => {
+const loadRoles = async (options) => {
   const { data, fetchData } = useFetch(
-    `/users/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
+    `/roles/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
   )
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
 
 const { columns, options } = useVServerTable()
-  .name('users')
-  .columns('name', 'login', 'deleted', 'actions')
+  .name('roles')
+  .columns('id', 'name', 'description', 'all_user', 'system', 'deleted', 'actions')
   .headSkin('table-secondary fw-bold')
   .headings({
+    id: 'ID',
     name: 'Nome',
-    login: 'Login',
+    description: 'Descrição',
+    all_user: 'Comum',
+    system: 'Sistema',
     deleted: 'Desabilitado',
     actions: 'Ações',
   })
-  .requestFunction(loadLayers)
+  .requestFunction(loadRoles)
   .filterable('query')
   .sortable('name')
   .skin('table table-bordered table-sm table-hover align-middle')
@@ -61,14 +66,14 @@ const { columns, options } = useVServerTable()
 
 const listing = ref()
 const handleDelete = async (row) => {
-  const { data, fetchData, error } = useFetch(`/users/${row.id}`, { method: 'DELETE' })
+  const { data, fetchData, error } = useFetch(`/roles/${row.id}`, { method: 'DELETE' })
   await fetchData()
   handleFetchResponse(error, data, {
     editing: false,
     state: null,
     successMessage: 'Registro excluído com sucesso!',
     redirectRoute: {
-      name: 'users',
+      name: 'roles',
     },
   })
   listing.value.refresh()
@@ -78,8 +83,8 @@ const handleAdd = () => {
 }
 const names = ref([
   {
-    label: 'Usuários',
-    route: 'users',
+    label: 'Grupos',
+    route: 'roles',
   },
 ])
 </script>
