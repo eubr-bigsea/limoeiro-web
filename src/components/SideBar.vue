@@ -127,6 +127,18 @@
             <span class="menu-text">Usuários</span>
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'roles' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar grupos"
+          >
+            <div class="icon-wrapper">
+              <Award class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Grupos</span>
+          </router-link>
+        </li>
         <!--
         <li class="nav-item">
           <a class="nav-link text-white" href="#" aria-label="Editar configurações">
@@ -152,6 +164,7 @@
 </template>
 <script setup>
 import {
+  Award,
   Users,
   Settings,
   TelescopeIcon,
