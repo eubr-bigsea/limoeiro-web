@@ -29,7 +29,7 @@ function formatDateHourSeconds(dateString) {
 
   const format = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' })
 
-  return format.format(date)
+  return format.format(date).replace(',', '')
 }
 
 const app = createApp(App)

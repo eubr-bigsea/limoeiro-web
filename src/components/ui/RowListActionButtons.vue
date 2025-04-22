@@ -1,5 +1,6 @@
 <template>
   <component
+    v-if="editLink"
     :is="editLinkComponent"
     v-bind="editSharedAttributes"
     class="btn btn-sm btn-outline-secondary me-1 rounded-circle"

@@ -103,9 +103,23 @@
                     }"
                     @delete="handleDeleteIngestion"
                   />
-                  <button class="btn btn-outline-success ms-1 btn-sm rounded-5" @click="execute">
-                    <LucidePlay size="15" fill="green" />
+                  <button
+                    class="btn btn-outline-success ms-1 btn-sm rounded-5"
+                    @click="execute(props.row.id)"
+                    title="Executar"
+                  >
+                    <LucidePlay size="15" fill="green" /> Executar
                   </button>
+                  <router-link
+                    class="btn btn-outline-info ms-1 btn-sm rounded-5"
+                    :to="{
+                      name: 'executions',
+                      xparams: { id: selected.id, ingestionId: props.row.id },
+                    }"
+                    title="Exibir Ingestões"
+                  >
+                    <LucideLogs size="15" color="#222" /> Ver execuções
+                  </router-link>
                 </template>
                 <template #deleted="props">
                   {{ props.row.deleted ? 'Não' : 'Sim' }}
@@ -124,9 +138,6 @@
             />
           </template>
         </tab-component>
-        <modal-window ref="editModal" modal-class="modal-lg modal-dialog-centered" title="Editar">
-          <template #body="body"> </template>
-        </modal-window>
       </div>
       <div class="w-25 ps-2 border-start explorer-side-container">
         <ExplorerRightBar :asset-id="route.params.id" />
@@ -141,7 +152,7 @@
 </template>
 
 <script setup>
-import { LucidePlay, LucidePlusCircle } from 'lucide-vue-next'
+import { LucideLogs, LucidePlay, LucidePlusCircle } from 'lucide-vue-next'
 import { inject, watchEffect, computed, ref, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
@@ -310,10 +321,26 @@ const updateProperty = async (name, value) => {
 }
 
 const executeConfirmation = ref()
-const execute = async () => {
+const currentIngestion = ref()
+const execute = async (ingestionId) => {
+  currentIngestion.value = ingestionId
   executeConfirmation.value.show()
 }
-const handleConfirmed = () => {}
+const handleConfirmed = () => {
+  const url = `/ingestions/start/${currentIngestion.value}`
+  const { data, error, fetchData } = useFetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  fetchData()
+  if (error.value) {
+    console.debug(error.value)
+  } else {
+    ingestionTable.value.refresh()
+  }
+}
 </script>
 
 <style scoped>

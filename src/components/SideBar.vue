@@ -21,6 +21,19 @@
             <span id="explore" class="menu-text">Explorar catálogo</span>
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'executions' }"
+            class="nav-link text-white text-nowrap"
+            aria-label="Execuções de processos de ingestão"
+            aria-current-value="page"
+          >
+            <div class="icon-wrapper">
+              <LucideLogs class="sidebar-icon" aria-labelledby="executions" />
+            </div>
+            <span id="executions" class="menu-text">Execuções de ingestões</span>
+          </router-link>
+        </li>
 
         <li class="nav-item">
           <router-link
@@ -127,6 +140,18 @@
             <span class="menu-text">Usuários</span>
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'users' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar grupos"
+          >
+            <div class="icon-wrapper">
+              <LucideUserCog class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Grupos</span>
+          </router-link>
+        </li>
         <!--
         <li class="nav-item">
           <a class="nav-link text-white" href="#" aria-label="Editar configurações">
@@ -168,6 +193,8 @@ import {
   LucideContact2,
   LucideUsers,
   LucideSearch,
+  LucideLogs,
+  LucideUserCog,
 } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

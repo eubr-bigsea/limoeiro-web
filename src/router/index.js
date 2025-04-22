@@ -8,6 +8,7 @@ import IAModelView from '@/views/IAModelView.vue'
 import DatabaseProviderView from '@/views/DatabaseProviderView.vue'
 import EditIngestion from '@/views/EditIngestion.vue'
 import AddDatabaseProvider from '@/views/AddDatabaseProvider.vue'
+import ListExecution from '@/views/ListExecution.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -111,6 +112,13 @@ const router = createRouter({
           meta: { title: 'Modelos de aprendizado de máquina' },
         },
       ],
+    },
+    {
+      path: '/executions',
+      name: 'executions',
+      component: ListExecution,
+      meta: { title: 'Exibir execuções de ingestão de dados' },
+      props: true,
     },
     {
       path: '/layers',
