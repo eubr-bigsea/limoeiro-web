@@ -6,6 +6,10 @@
       <template #actions="props">
         <row-list-action-buttons
           :row="props.row"
+          :edit-link="props.row.system ? null : {
+            name: 'edit-role',
+            params: { id: props.row.id },
+          }"
           @delete="handleDelete"
         />
       </template>
@@ -45,10 +49,9 @@ const loadRoles = async (options) => {
 
 const { columns, options } = useVServerTable()
   .name('roles')
-  .columns('id', 'name', 'description', 'all_user', 'system', 'deleted', 'actions')
+  .columns('name', 'description', 'all_user', 'system', 'deleted', 'actions')
   .headSkin('table-secondary fw-bold')
   .headings({
-    id: 'ID',
     name: 'Nome',
     description: 'Descrição',
     all_user: 'Comum',

@@ -215,8 +215,14 @@ const router = createRouter({
     {
       path: '/roles/add',
       name: 'add-role',
-      component: () => import('@/views/AddRole.vue'),
+      component: () => import('@/views/EditRole.vue'),
       meta: { title: 'Adicionar grupo' },
+    },
+    {
+      path: '/roles/add/:id',
+      name: 'edit-role',
+      component: () => import('@/views/EditRole.vue'),
+      meta: { title: 'Editar grupo' },
     },
   ],
 })
