@@ -6,7 +6,7 @@
       <template #actions="props">
         <row-list-action-buttons
           :row="props.row"
-          :edit-link="props.row.system ? null : {
+          :edit-link="{
             name: 'edit-role',
             params: { id: props.row.id },
           }"

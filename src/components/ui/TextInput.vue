@@ -12,6 +12,7 @@
     v-bind="$attrs"
     @blur="rules?.$touch"
     ref="input"
+    :disabled="disabled"
   />
   <textarea
     v-else
@@ -23,6 +24,7 @@
     @blur="rules?.$touch"
     ref="input"
     rows="4"
+    :disabled="disabled"
   />
   <div v-if="displayError" class="form-text text-danger">
     <span v-for="error in rules?.$errors" :key="error.$uid">
@@ -43,6 +45,7 @@ const props = defineProps({
   displayError: { type: Boolean, default: true },
   multiLine: { type: Boolean, default: false },
   focus: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
 })
 const modelValueProxy = computed({
   get: () => props.modelValue,

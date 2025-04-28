@@ -1,7 +1,6 @@
 <template>
   <div class="lookup">
     <div class="input-container">
-      {{ searchQuery }}
       <input
         v-model="searchQuery"
         type="text"
