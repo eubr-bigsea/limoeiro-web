@@ -1,5 +1,6 @@
 <template>
-  <component v-if="editLink"
+  <component
+    v-if="editLink"
     :is="editLinkComponent"
     v-bind="editSharedAttributes"
     class="btn btn-sm btn-outline-secondary me-1 rounded-circle"
@@ -7,19 +8,16 @@
   >
     <pencil :size="16" />
   </component>
+
   <component
     :is="deleteLinkComponent"
     v-bind="deleteSharedAttributes"
     class="btn btn-outline-danger btn-sm rounded-circle"
-    title="Remover registro"
+    :title="confirmationTitle"
   >
     <trash2 :size="16" />
   </component>
-  <confirmation-dialog
-    ref="confirm"
-    message="Deseja excluir este registro?"
-    @confirmed="handleConfirmed"
-  />
+  <confirmation-dialog ref="confirm" :message="confirmationMessage" @confirmed="handleConfirmed" />
 </template>
 <script setup>
 import { Pencil, Trash2 } from 'lucide-vue-next'
@@ -30,6 +28,8 @@ const props = defineProps({
   row: { required: true, type: Object },
   editLink: { type: Object },
   deleteLink: { type: Object },
+  confirmationMessage: { type: String, default: 'Deseja excluir este registro?' },
+  confirmationTitle: { type: String, default: 'Remover registro' },
 })
 const emit = defineEmits(['edit', 'delete'])
 
