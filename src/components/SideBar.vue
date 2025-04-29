@@ -136,7 +136,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#" aria-label="Sair, encerrando a sessão do usuário">
+          <a class="nav-link text-white" @click="authService.logout" aria-label="Sair, encerrando a sessão do usuário">
             <div class="icon-wrapper">
               <log-out class="sidebar-icon" />
             </div>
@@ -169,6 +169,8 @@ import {
 } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authService } from '../services/auth';
+
 
 const emit = defineEmits(['expandSidebar', 'collapseSidebar'])
 const isCollapsed = ref(true)
