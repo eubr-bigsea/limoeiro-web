@@ -168,11 +168,14 @@ watch(debouncedQuery, async (newQuery) => {
 
 // Seleciona um item
 const selectOption = (option) => {
-  selectedOption.value = option
   searchQuery.value = option[props.label] // Exibe o nome da opção no input
   options.value = []
   activeIndex.value = -1
   isEditing.value = false // Sai do modo de edição ao selecionar
+  // Must be the last line, because it triggers the watcher
+  // that updates the modelValue
+  // and the searchQuery
+  selectedOption.value = option
 }
 
 // Limpa a seleção
@@ -202,9 +205,8 @@ const editSelection = async () => {
   input.value.focus()
 }
 
-// Cancela a edição e restaura a opção anterior
-const cancelEdit = () => {
-  if (isEditing.value) {
+const cancelEdit = (explicit) => {
+  if (explicit || isEditing.value) {
     if (selectedOption.value) {
       searchQuery.value = selectedOption.value[props.label] || ''
     } else {
@@ -239,7 +241,7 @@ const handleKeyDown = (event) => {
 const focus = () => {
   input.value.focus()
 }
-defineExpose({ focus })
+defineExpose({ focus, clearSelection, cancelEdit })
 // Adiciona/remover evento de teclado globalmente
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)

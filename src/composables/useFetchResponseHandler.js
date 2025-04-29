@@ -12,8 +12,9 @@ export function useFetchResponseHandler() {
       state = {},
       successMessage = 'Dados salvos com sucesso!',
       redirectRoute,
+      router
     } = options
-
+    
     if (error.value) {
       if ('detail' in error.value) {
         // Log detailed errors in a table
@@ -41,12 +42,12 @@ export function useFetchResponseHandler() {
             state[key] = data.value[key]
           }
         })
-        // } else if (router && redirectRoute) {
-        //   // Redirect to specified route if not in editing mode
-        //   router.push({
-        //     name: redirectRoute.name,
-        //     params: redirectRoute.params || {},
-        //   })
+      } else if (router && redirectRoute) {
+        // Redirect to specified route if not in editing mode
+        router.push({
+          name: redirectRoute.name,
+          params: redirectRoute.params || {},
+        })
       }
 
       // Show success toast
