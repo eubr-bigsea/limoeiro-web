@@ -203,12 +203,14 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/Login.vue')
+      component: () => import('@/views/Login.vue'),
+      meta: { title: 'Login'}
     },
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('@/views/Auth.vue')
+      component: () => import('@/views/Auth.vue'),
+      meta: { title: 'Login'}
     }
   ],
 })
@@ -224,7 +226,7 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'auth' });
     } else {
       const user = await authService.getUser();
-      localStorage.setItem('user', JSON.stringify(user.profile.username));      
+      localStorage.setItem('user', JSON.stringify(user.profile.name));      
       next();
     }
   } else {

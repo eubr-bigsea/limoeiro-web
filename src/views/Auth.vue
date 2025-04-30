@@ -20,7 +20,4 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div >
-    <p>Redirecionando para o servidor de autenticação...</p>
-  </div>
 </template>

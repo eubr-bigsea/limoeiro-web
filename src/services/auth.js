@@ -1,40 +1,28 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 
-const authUrl = import.meta.env.VITE_AUTH_URL;
-
-
-const metadata = {
-    issuer: authUrl + "/oauth2/token",
-    jwks_uri: authUrl + "/oauth2/jwks",
-    authorization_endpoint: authUrl + "/oauth2/authorize",
-    token_endpoint: authUrl + "/oauth2/token",
-    userinfo_endpoint: authUrl + "/oauth2/userinfo",
-    end_session_endpoint: authUrl + "/oidc/logout",
-    check_session_iframe: authUrl + "/oidc/checksession",
-    revocation_endpoint: authUrl + "/oauth2/revoke",
-    introspection_endpoint: authUrl + "/oauth2/introspect"
-
-}
-
-const config = {
-    authority: `${authUrl}/oauth2/authorize`,
-    metadata: metadata,
+const IDENTITY_CONFIG = {
+    authority: import.meta.env.VITE_AUTH_URL + "/oauth2/authorize",
     client_id: import.meta.env.VITE_IDENTITY_CLIENT_ID,
+    client_secret: import.meta.env.VITE_IDENTITY_CLIENT_SECRET,
     redirect_uri: import.meta.env.VITE_REDIRECT_URL,
-    login: authUrl + "/login",
-    automaticSilentRenew: false, 
-    loadUserInfo: true,
-    responseType: "id_token token",
-    grantType: "password",
-    scope: 'openid profile',
+    response_type: "code", 
+    scope: "openid profile",
     webAuthResponseType: "id_token token",
-    userStore: new WebStorageStateStore({ store: window.localStorage })
+    loadUserInfo: true,
+    automaticSilentRenew: true,
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+    metadata: {
+        issuer: import.meta.env.VITE_AUTH_URL,
+        authorization_endpoint: import.meta.env.VITE_AUTH_URL + "/oauth2/authorize",
+        token_endpoint: import.meta.env.VITE_AUTH_URL + "/oauth2/token",
+        userinfo_endpoint: import.meta.env.VITE_AUTH_URL + "/oauth2/userinfo",
+        end_session_endpoint: import.meta.env.VITE_AUTH_URL + "/oidc/logout",
+    }
 };
-
 
 class AuthService {
     constructor() {
-        this.userManager = new UserManager(config);
+        this.userManager = new UserManager(IDENTITY_CONFIG);
     }
 
     async login() {
@@ -57,5 +45,10 @@ class AuthService {
     async getUser() {
         return this.userManager.getUser();
     }
+
+    async clearStaleState() {
+        await this.userManager.clearStaleState();
+    }
 }
+
 export const authService = new AuthService();
