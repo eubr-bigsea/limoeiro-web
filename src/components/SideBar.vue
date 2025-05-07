@@ -114,6 +114,20 @@
           </router-link>
         </li>
       </ul>
+
+      <li class="nav-item">
+        <button
+          class="nav-link text-white text-nowrap bg-transparent border-0"
+          aria-label="Chamar endpoint seguro"
+          @click="fetchData"
+        >
+          <div class="icon-wrapper">
+            <LockIcon class="sidebar-icon" />
+          </div>
+          <span class="menu-text">Secure Endpoint</span>
+        </button>
+      </li>
+     
       <ul class="nav flex-column mt-auto border-top mb-5">
         <li class="nav-item">
           <router-link
@@ -185,10 +199,13 @@ import {
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/auth';
+import { useFetch } from '@/composables/useFetch'
 
 
 const emit = defineEmits(['expandSidebar', 'collapseSidebar'])
 const isCollapsed = ref(true)
+
+const { data, error, isLoading, fetchData } = useFetch('/collector/secure-endpoint')
 
 const expandSidebar = () => {
   isCollapsed.value = false
