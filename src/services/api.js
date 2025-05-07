@@ -14,3 +14,29 @@ export async function fetchResource(endpoint, options = {}) {
     return null
   }
 }
+
+export async function getApimToken() {
+  const apimTokenUrl = import.meta.env.VITE_APIM_TOKEN_URL;
+  const clientId = import.meta.env.VITE_APIM_CONSUMER_KEY;
+  const clientSecret = import.meta.env.VITE_APIM_CONSUMER_SECRET;
+
+  const body = new URLSearchParams()
+  body.append('grant_type', 'client_credentials')
+  body.append('client_id', clientId)
+  body.append('client_secret', clientSecret)
+  body.append('scope', 'default')
+
+  const response = await fetch(apimTokenUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body
+  })
+
+  const data = await response.json()
+  return {
+    access_token: data.access_token,
+    expires_in: data.expires_in
+  }	
+}
