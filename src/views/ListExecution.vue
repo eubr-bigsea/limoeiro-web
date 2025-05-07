@@ -40,13 +40,13 @@ import { useFetchResponseHandler } from '@/composables/useFetchResponseHandler'
 import { useVServerTable } from '@/composables/useVServerTable'
 import IngestionLogView from '@/views/IngestionLogView.vue'
 import { LucideEye } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const { handleFetchResponse } = useFetchResponseHandler()
 
-const loadDomains = async (options) => {
+const loadExecutions = async (options) => {
   const { data, fetchData } = useFetch(
     `/executions/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
   )
@@ -65,7 +65,7 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     status: 'Situação',
   })
-  .requestFunction(loadDomains)
+  .requestFunction(loadExecutions)
   .filterable('query')
   .skin('table table-bordered table-sm table-hover align-middle')
   .columnsStyles({})
@@ -97,4 +97,9 @@ const logInfo = ref()
 const displayLogs = (executionId) => {
   logInfo.value.displayModal(executionId)
 }
+
+onMounted(() => {
+  setInterval(()=>{listing.value.refresh()},10000)
+})
+
 </script>
