@@ -216,7 +216,6 @@ const router = createRouter({
       meta: { title: 'Editar usuário', requiresAuth: true },
     },
     {
-<<<<<<< Updated upstream
       path: '/roles',
       name: 'roles',
       component: () => import('@/views/ListRoles.vue'),
