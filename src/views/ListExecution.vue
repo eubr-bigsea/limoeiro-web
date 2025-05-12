@@ -1,12 +1,8 @@
 <template>
   <div class="mx-2 my-2">
-    {{ provider }}
-    <p></p>
-    {{ ingestionsList }}
-    {{ ingestion }}
     <bread-crumb :items="names" />
     <list-view-header title="Execuções" :showAdd="false" />
-    <v-server-table :options="options" :columns="columns" ref="listing" name="executions">
+    <v-server-table :options="options" :columns="columns" ref="listing" name="executions" :use-form="false">
       <template #afterFilter>
         <div class="d-flex">
           <div class="ms-4 w-50">
@@ -106,12 +102,14 @@ const retrieveProviders = async (query) => {
   return data.value.items.map(({ id, name }) => ({ id, name }))
 }
 
-const handleProviderChange = () => {
-  console.log(provider.value)
+const handleProviderChange = () => {  
   if (provider.value == null){
     ingestion.value = null
+    ingestionsList.value = []
   }
-  loadIngestions()
+  else {
+    loadIngestions()
+  }
 }
 
 const { columns, options } = useVServerTable()

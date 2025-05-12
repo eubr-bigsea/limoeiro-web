@@ -3,7 +3,7 @@
   <div class="v-server-table-area border p-3 rounded-3">
     <slot v-if="options.filterable" name="filters">
       <div class="filters">
-        <form class="mb-4 px-1" @submit.prevent="$event.preventDefault()">
+        <component :is="useForm ? 'form' : 'div'" class="mb-4 px-1" @submit.prevent="$event.preventDefault()">
           <div class="justify-content-between d-flex">
             <template v-if="showFilter">
               <div class="col-5">
@@ -45,7 +45,7 @@
               </span>
             </div>
           </div>
-        </form>
+        </component>
       </div>
     </slot>
     <table v-show="showSkeleton && firstLoad" class="table b-table table-striped table-bordered">
@@ -142,6 +142,7 @@ const props = defineProps({
   name: { type: String, required: false, default: Math.random().toString(36).slice(2, 7) },
   showSkeleton: { type: Boolean, required: false, default: true },
   showFilter: { type: Boolean, required: false, default: true },
+  useForm: {type: Boolean, required: false, default: true}
 })
 
 const emit = defineEmits(['loaded'])
