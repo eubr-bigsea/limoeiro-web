@@ -259,7 +259,8 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'auth' });
     } else {
       const user = await authService.getUser();
-      localStorage.setItem('user', JSON.stringify(user.profile.name));      
+      localStorage.setItem('name', user.profile.name);      
+      localStorage.setItem('username', user.profile.username);
       next();
     }
   } else {
