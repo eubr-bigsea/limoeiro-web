@@ -250,7 +250,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const title = document.querySelector('h2')
-  document.title = to.meta.title + (title ? title.innerHTML : '') 
+  document.title = to.meta.title 
 
   const isAuthDisabled = import.meta.env.VITE_AUTH_DISABLED === 'true';
 
