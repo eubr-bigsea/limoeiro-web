@@ -192,20 +192,20 @@
           <CrontabEditor v-model="state.scheduling_type" format="quartz" />
           -->
         <select v-model="state.scheduling_type" class="form-select form-select-sm">
-          <option value="manual">Disparo manual</option>
-          <option value="cron">Recorrente</option>
+          <option value="MANUAL">Disparo manual</option>
+          <option value="CRON">Recorrente</option>
         </select>
-        {{ state.scheduling_type }}
-        <div v-if="state.scheduling_type === 'cron'">
+
+        <div v-if="state.scheduling_type === 'CRON'">
           <div>
             <cron-light
-              v-model="state.value"
+              v-model="state.scheduling"
               @error="state.error = $event"
               locale="pt"
             ></cron-light>
             <div class="mt-3">
               <label>Expressão</label>
-              <input type="text" class="form-control form-control-sm" v-model="state.value" />
+              <input type="text" class="form-control form-control-sm" v-model="state.scheduling" />
               <div v-if="state.error" class="mt-3">
                 Expressão inválida
                 <div class="badge bg-danger fw-normal mt-1">{{ state.error }}</div>
