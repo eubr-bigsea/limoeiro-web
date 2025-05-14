@@ -9,6 +9,7 @@ onMounted(async () => {
   try {
     const isAuthenticated = await authService.isAuthenticated();
     if (!isAuthenticated) {
+      localStorage.clear();
       await authService.login(); 
     } else {
       router.push('/'); 
