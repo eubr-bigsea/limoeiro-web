@@ -252,16 +252,22 @@ router.beforeEach(async (to, from, next) => {
   const title = document.querySelector('h2')
   document.title = to.meta.title + (title ? title.innerHTML : '') 
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    const isAuthenticated = await authService.isAuthenticated();
+  const isAuthDisabled = import.meta.env.VITE_AUTH_DISABLED === 'true';
 
-    if (!isAuthenticated) {
-      next({ name: 'auth' });
-    } else {
-      const user = await authService.getUser();
-      localStorage.setItem('name', user.profile.name);      
-      localStorage.setItem('username', user.profile.username);
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+
+    if (isAuthDisabled) {
       next();
+    } else{
+      const isAuthenticated = await authService.isAuthenticated();
+      if (!isAuthenticated) {
+        next({ name: 'auth' });
+      } else {
+        const user = await authService.getUser();
+        localStorage.setItem('name', user.profile.name);      
+        localStorage.setItem('username', user.profile.username);
+        next();
+      }
     }
   } else {
     next();
