@@ -50,7 +50,7 @@
       </template>
       <template #ingestion="props">
         <router-link
-          :to="{ name: 'explore-database-providers', params: { id: props.row.ingestion.id } }"
+          :to="{ name: 'explore-database-providers', params: { id: props.row.ingestion.provider_id } }"
         >
           {{ props.row.ingestion.name }}
         </router-link>
