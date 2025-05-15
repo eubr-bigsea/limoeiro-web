@@ -2,7 +2,36 @@
   <div class="mx-2 my-2">
     <bread-crumb :items="names" />
     <list-view-header title="Execuções" :showAdd="false" />
-    <v-server-table :options="options" :columns="columns" ref="listing" name="executions">
+    <v-server-table :options="options" :columns="columns" ref="listing" name="executions" :use-form="false">
+      <template #afterFilter>
+        <div class="d-flex">
+          <div class="ms-4 w-50">
+            <label for="provider" class="font-weight-bold">Provedor</label>
+            <LookupComponent
+              class="mb-2"
+              v-model="provider"
+              :fetchFunction="retrieveProviders"
+              label="name"
+              value="id"
+              @change="handleProviderChange"
+            />
+          </div>
+          <div class="ms-4 w-50">
+            <label for="ingestion" class="font-weight-bold">Processo de Ingestão</label>
+            <select
+              v-model="ingestion"
+              class="form-control form-select form-select-sm"
+              name="ingestions"
+              :disabled="provider == null"
+            >
+              <option key="" value=""></option>
+              <option v-for="ingestion in ingestionsList" :key="ingestion.id" :value="ingestion.id">
+                {{ ingestion.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </template>
       <template #actions="props">
         <row-list-action-buttons :row="props.row" @delete="handleDelete" />
         <button
@@ -21,7 +50,7 @@
       </template>
       <template #ingestion="props">
         <router-link
-          :to="{ name: 'explore-database-providers', params: { id: props.row.ingestion.id } }"
+          :to="{ name: 'explore-database-providers', params: { id: props.row.ingestion.provider_id } }"
         >
           {{ props.row.ingestion.name }}
         </router-link>
@@ -35,24 +64,54 @@ import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import ListViewHeader from '@/components/ui/ListViewHeader.vue'
 import RowListActionButtons from '@/components/ui/RowListActionButtons.vue'
 import VServerTable from '@/components/VServerTable.vue'
+import LookupComponent from '@/components/ui/LookupComponent.vue'
 import { useFetch } from '@/composables/useFetch.js'
 import { useFetchResponseHandler } from '@/composables/useFetchResponseHandler'
 import { useVServerTable } from '@/composables/useVServerTable'
 import IngestionLogView from '@/views/IngestionLogView.vue'
 import { LucideEye } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const { handleFetchResponse } = useFetchResponseHandler()
 
-const loadDomains = async (options) => {
+const loadExecutions = async (options) => {
   const { data, fetchData } = useFetch(
-    `/executions/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
+    `/executions/?query=${options.query || ''}${ingestion.value ? "&ingestion_id="+ingestion.value : ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
   )
   await fetchData()
   return { data: data.value.items, count: data.value.count }
 }
+
+const provider = ref(null)
+const ingestionsList = ref([])
+const ingestion = ref(null)
+
+const loadIngestions = async () => {
+  const { data, fetchData } = useFetch(`/ingestions/?${provider.value ? "provider_id="+provider.value.id : ''}&sort_by=name`)
+  await fetchData()
+  ingestionsList.value = data.value.items
+}
+
+const retrieveProviders = async (query) => {
+  const { data, fetchData } = useFetch(
+    `/database-providers/?query=${query}&sort_by=name&page_size=10`,
+  )
+  await fetchData()
+  return data.value.items.map(({ id, name }) => ({ id, name }))
+}
+
+const handleProviderChange = () => {  
+  if (provider.value == null){
+    ingestion.value = null
+    ingestionsList.value = []
+  }
+  else {
+    loadIngestions()
+  }
+}
+
 const { columns, options } = useVServerTable()
   .name('executions')
   .columns('id', 'created_at', 'updated_at', 'status', 'ingestion', 'actions')
@@ -65,7 +124,7 @@ const { columns, options } = useVServerTable()
     actions: 'Ações',
     status: 'Situação',
   })
-  .requestFunction(loadDomains)
+  .requestFunction(loadExecutions)
   .filterable('query')
   .skin('table table-bordered table-sm table-hover align-middle')
   .columnsStyles({})
@@ -73,6 +132,13 @@ const { columns, options } = useVServerTable()
   .build()
 
 const listing = ref()
+
+const handleIngestionChange = () => {
+  listing.value.refresh()
+}
+
+watch(ingestion, handleIngestionChange)
+
 const handleDelete = async (row) => {
   const { data, fetchData, error } = useFetch(`/executions/${row.id}`, { method: 'DELETE' })
   await fetchData()
@@ -97,4 +163,9 @@ const logInfo = ref()
 const displayLogs = (executionId) => {
   logInfo.value.displayModal(executionId)
 }
+
+onMounted(() => {
+  //setInterval(()=>{listing.value.refresh()},10000);
+  //loadIngestions()
+})
 </script>
