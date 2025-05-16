@@ -20,16 +20,39 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import SideBar from '@/components/SideBar.vue'
 import MainToolbar from '@/components/MainToolbar.vue'
+import { usePermissionStore } from './stores/permissions'
+import { useFetch } from '@/composables/useFetch.js'
 
 const route = useRoute()
 
 const isAuthRoute = computed(() => {
   return route.path.startsWith('/login') || route.path.startsWith('/auth')
 })
+
+const permissionStore = usePermissionStore()
+
+const fetchPermissions = async () => {
+  try{
+    const { data, fetchData } = useFetch(`/users/permissions/`, {
+        headers: { 'x-jwt-assertion': localStorage.getItem('apim_token') },
+    })
+    await fetchData()
+    permissionStore.setPermissions(data.value);
+  } catch (error) {
+    console.error('Erro ao buscar permissões:', error);
+  }
+}
+
+onMounted(()=>{
+  fetchPermissions();
+})
+
+
+
 </script>
 
 <style scoped>
