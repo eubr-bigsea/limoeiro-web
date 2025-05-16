@@ -8,8 +8,8 @@ export const usePermissionStore = defineStore('permissions', {
     setPermissions(perms) {
       this.permissions = perms
     },
-    hasPermission(perm) {
-      return this.permissions.map((p) => (p.id)).includes(perm)
+    hasPermission(perms) {
+      return perms.some(v => this.permissions.map(p => p.id).includes(v))
     },
   },
 })

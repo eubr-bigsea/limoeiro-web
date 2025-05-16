@@ -8,7 +8,7 @@
   >
     <div class="d-flex sidebar-content flex-column vh-100">
       <ul class="nav flex-column mt-none">
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EXPLORE_CATALOG','CHANGE_CATALOG','SEARCH_CATALOG'])" class="nav-item">
           <router-link
             :to="{ name: 'explore' }"
             class="nav-link text-white text-nowrap active"
@@ -22,7 +22,7 @@
           </router-link>
         </li>
 
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_USERS'])" class="nav-item">
           <router-link
             :to="{ name: 'people' }"
             class="nav-link text-white text-nowrap active"
@@ -35,7 +35,7 @@
             <span class="menu-text">Pessoas</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_ORGANIZATIONS'])" class="nav-item">
           <router-link
             :to="{ name: 'companies' }"
             class="nav-link text-white text-nowrap active"
@@ -48,7 +48,7 @@
             <span class="menu-text">Organizações</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_DOMAINS'])" class="nav-item">
           <router-link
             :to="{ name: 'domains' }"
             class="nav-link text-white text-nowrap active"
@@ -61,7 +61,7 @@
             <span class="menu-text">Sistemas</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <!-- <li v-if="permissionStore.hasPermission(['EDIT_DOMAINS'])" class="nav-item">
           <router-link
             :to="{ name: 'domains' }"
             class="nav-link text-white text-nowrap active"
@@ -73,8 +73,8 @@
             </div>
             <span class="menu-text">Domínios</span>
           </router-link>
-        </li>
-        <li class="nav-item">
+        </li> -->
+        <li v-if="permissionStore.hasPermission(['EDIT_LAYERS'])" class="nav-item">
           <router-link
             :to="{ name: 'layers' }"
             class="nav-link text-white text-nowrap active"
@@ -87,7 +87,7 @@
             <span class="menu-text">Camadas</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_TAGS'])" class="nav-item">
           <router-link
             :to="{ name: 'tags' }"
             class="nav-link text-white text-nowrap active"
@@ -115,7 +115,7 @@
         </li>
       </ul>
       <ul class="nav flex-column mt-auto border-top mb-5">
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_USERS'])" class="nav-item">
           <router-link
             :to="{ name: 'users' }"
             class="nav-link text-white text-nowrap active"
@@ -127,7 +127,7 @@
             <span class="menu-text">Usuários</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="permissionStore.hasPermission(['EDIT_ROLES'])" class="nav-item">
           <router-link
             :to="{ name: 'roles' }"
             class="nav-link text-white text-nowrap active"
@@ -185,6 +185,7 @@ import {
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/auth';
+import { usePermissionStore } from '../stores/permissions'
 
 
 const emit = defineEmits(['expandSidebar', 'collapseSidebar'])
@@ -201,6 +202,9 @@ const collapseSidebar = () => {
 const router = useRouter()
 
 const currentRoute = ref(router.currentRoute.value.name)
+
+const permissionStore = usePermissionStore()
+
 </script>
 <style scoped>
 .router-link-active {
