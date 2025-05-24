@@ -91,14 +91,14 @@
           <LucideSave size="16px" />
           Salvar
         </button>
-        <button
+        <!-- <button
           type="submit"
           class="btn btn-outline-secondary btn-sm me-1 px-4"
           :disabled="v$.$invalid"
         >
           <LucideUnplug size="20px" color="navy" />
           Testar conexão (FIXME)
-        </button>
+        </button> -->
       </div>
     </form>
   </div>

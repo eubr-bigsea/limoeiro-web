@@ -48,7 +48,7 @@
             <span class="menu-text">Organizações</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link
             :to="{ name: 'domains' }"
             class="nav-link text-white text-nowrap active"
@@ -60,7 +60,7 @@
             </div>
             <span class="menu-text">Sistemas</span>
           </router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link
             :to="{ name: 'domains' }"

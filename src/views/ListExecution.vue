@@ -165,7 +165,7 @@ const displayLogs = (executionId) => {
 }
 
 onMounted(() => {
-  //setInterval(()=>{listing.value.refresh()},10000);
+  setInterval(()=>{listing.value.refresh()},3000);
   //loadIngestions()
 })
 </script>
