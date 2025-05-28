@@ -269,7 +269,8 @@ const state = reactive({
   scheduling: '* * * * *', // Default crontab value
   value: '* * * * *',
   error: '',
-  scheduling_type: null,
+  scheduling_type: 'MANUAL',
+ 
 })
 
 const v$ = useVuelidate(rules, state)
