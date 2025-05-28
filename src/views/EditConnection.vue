@@ -36,7 +36,6 @@
               v-model="state.database"
               :rules="v$.database"
               maxlength="100"
-              required
             />
           </div>
         </div>
@@ -50,7 +49,6 @@
               v-model="state.user_name"
               :rules="v$.user_name"
               maxlength="100"
-              required
               autocomplete="username"
             />
           </div>
@@ -63,7 +61,6 @@
               v-model="state.password"
               :rules="v$.password"
               maxlength="100"
-              required
               type="password"
               autocomplete="current-password"
             />
@@ -142,15 +139,12 @@ const rules = {
     $autoDirty: true,
   },
   database: {
-    required: helpers.withMessage('Banco de dados é obrigatório', required),
     $autoDirty: true,
   },
   user_name: {
-    required: helpers.withMessage('Usuário é obrigatório', required),
     $autoDirty: true,
   },
   password: {
-    required: helpers.withMessage('Senha é obrigatória', required),
     $autoDirty: true,
   },
   extra_parameters: {
@@ -177,12 +171,17 @@ const handleSubmit = async () => {
   state.provider_id = props.provider_id
 
   const method = state.id ? 'PATCH' : 'POST'
+
+  const filteredState = Object.fromEntries(
+    Object.entries(state).filter(([_, value]) => value !== "")
+  )
+
   const { data, error, fetchData } = useFetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(state),
+    body: JSON.stringify(filteredState),
   })
   await fetchData()
   if (error.value) {
