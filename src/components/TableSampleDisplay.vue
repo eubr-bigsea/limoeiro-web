@@ -43,8 +43,8 @@
         <table class="table table-sm table-striped sample table-bordered">
           <thead>
             <tr>
-              <th v-for="field in sampleData.content.fields" :key="field.id" class="sample">
-                {{ field.id }} ({{ field.type }})
+              <th v-for="field in sampleData.content.fields" :key="field" class="sample">
+                {{ field }}
               </th>
             </tr>
           </thead>
@@ -99,7 +99,14 @@ const modal = ref()
 const display = async (sample) => {
   const { data, fetchData } = useFetch(`/samples/${sample.id}`)
   await fetchData()
-  data.value.content = JSON.parse(data.value.content)
+  
+  data.value.content.records = data.value.content
+  if (data.value.content.records.length > 0) {
+    data.value.content.fields = Object.keys(data.value.content.records[0])
+  } else {
+    data.value.content.fields = []
+  }
+
   sampleData.value = data.value
   modal.value.show()
 }
