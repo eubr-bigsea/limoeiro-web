@@ -114,7 +114,7 @@
                     class="btn btn-outline-info ms-1 btn-sm rounded-5"
                     :to="{
                       name: 'executions',
-                      xparams: { id: selected.id, ingestionId: props.row.id },
+                      query: { id: selected.id, ingestionId: props.row.id},
                     }"
                     title="Exibir Ingestões"
                   >
@@ -153,7 +153,7 @@
 
 <script setup>
 import { LucideLogs, LucidePlay, LucidePlusCircle } from 'lucide-vue-next'
-import { inject, watchEffect, computed, ref, nextTick, watch } from 'vue'
+import { inject, watchEffect, computed, ref, nextTick, watch, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
 import { useVServerTable } from '@/composables/useVServerTable.js'

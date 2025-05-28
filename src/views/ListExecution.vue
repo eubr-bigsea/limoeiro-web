@@ -71,9 +71,9 @@ import { useVServerTable } from '@/composables/useVServerTable'
 import IngestionLogView from '@/views/IngestionLogView.vue'
 import { LucideEye } from 'lucide-vue-next'
 import { onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
+const route = useRoute()
 const { handleFetchResponse } = useFetchResponseHandler()
 
 const loadExecutions = async (options) => {
@@ -81,12 +81,21 @@ const loadExecutions = async (options) => {
     `/executions/?query=${options.query || ''}${ingestion.value ? "&ingestion_id="+ingestion.value : ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
   )
   await fetchData()
+  
   return { data: data.value.items, count: data.value.count }
 }
 
 const provider = ref(null)
 const ingestionsList = ref([])
 const ingestion = ref(null)
+
+const loadProvider = async (id) => {
+  const { data, fetchData } = useFetch(`/database-providers/${id}`)
+  await fetchData()
+  provider.value = data.value
+  await loadIngestions()
+  ingestion.value = route.query.ingestionId || null
+}
 
 const loadIngestions = async () => {
   const { data, fetchData } = useFetch(`/ingestions/?${provider.value ? "provider_id="+provider.value.id : ''}&sort_by=name`)
@@ -100,6 +109,7 @@ const retrieveProviders = async (query) => {
   )
   await fetchData()
   return data.value.items.map(({ id, name }) => ({ id, name }))
+
 }
 
 const handleProviderChange = () => {  
@@ -165,7 +175,14 @@ const displayLogs = (executionId) => {
 }
 
 onMounted(() => {
-  setInterval(()=>{listing.value.refresh()},3000);
+  if (route.query.id) {
+    loadProvider(route.query.id)
+  }
+  else {
+    provider.value = null
+    ingestionsList.value = []
+  }
+  //setInterval(()=>{listing.value.refresh()},3000);
   //loadIngestions()
 })
 </script>
