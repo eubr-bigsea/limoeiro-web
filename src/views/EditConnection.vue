@@ -181,7 +181,7 @@ const handleSubmit = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(filteredState),
+    body: JSON.stringify(state),
   })
   await fetchData()
   if (error.value) {
