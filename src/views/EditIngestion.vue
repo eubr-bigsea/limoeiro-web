@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="col-12 mt-4">
+          <div class="col-12 ">
             <h6>Padrões para seleção de banco de dados</h6>
           </div>
           <div class="col-md-6 col-lg-6">
@@ -152,6 +152,34 @@
               :display-error="true"
             />
           </div>
+          <div class="col-12">
+            <h6>Procedimentos extras na coleta</h6>
+          </div>
+          <div class="col-md-4 col-lg-4">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="collect_samples"
+                v-model="state.collect_samples"
+              />
+              <label class="form-check-label" for="collect_samples">Coletar amostras</label>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-4">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="apply_semantic_analysis"
+                :disabled="!state.collect_samples"
+                v-model="state.apply_semantic_analysis"
+              />
+              <label class="form-check-label" for="apply_semantic_analysis">Inferir tipo semântico</label>
+            </div>
+          </div>
 
           <!-- <div class="bg-info my-4">Form is invalid ?{{ v$.$invalid }} {{ v$.$anyDirty }}</div>
           <div class="bg-info my-4">
@@ -163,7 +191,7 @@
             {{ state }}
           </div> -->
 
-          <div class="col-12">
+          <div class="col-12 mt-4">
             <button
               type="submit"
               class="btn btn-success btn-sm me-1 px-4"
@@ -218,7 +246,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { required, helpers, integer, minValue, maxValue } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { useFetch } from '@/composables/useFetch.js'
@@ -266,6 +294,9 @@ const state = reactive({
   deleted: false,
   include_view: true,
   provider_id: route.params.id,
+  collect_samples: false,
+  apply_semantic_analysis: false,
+  // Default values for scheduling
   scheduling: '* * * * *', // Default crontab value
   value: '* * * * *',
   error: '',
@@ -343,5 +374,11 @@ const names = ref([
 onMounted(async () => {
   await load()
   //v$.value.$touch()
+})
+
+watch(() => state.collect_samples, (newValue) => {
+  if (!newValue) {
+    state.apply_semantic_analysis = false
+  }
 })
 </script>
