@@ -115,6 +115,17 @@
                   </template>
                 </SelectableList>
               </div>
+              <div class="mt-2 ms-2">
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    id="includeColumnCheckbox"
+                    v-model="includeColumn"
+                    class="form-check-input"
+                  />
+                  <label for="includeColumnCheckbox" class="form-check-label">Buscar por colunas</label>
+                </div>
+              </div>
               <!-- <div>
               <SelectableList
                 :items="options1"
@@ -149,6 +160,10 @@
                   Limpar filtros
                 </button>
               </div>
+            </div >
+           
+            <div v-if="includeColumn" class="ms-2">
+              *Ao buscar por colunas, apenas os ativos do tipo Tabela serão retornados.
             </div>
           </template>
           <template #name="props">
@@ -284,6 +299,7 @@ const loadDomains = async () => {
 
 const layers = ref([])
 const layerList = ref([])
+const includeColumn = ref(false)
 
 const loadLayers = async () => {
   const { data, fetchData } = useFetch(`/layers/`)
@@ -385,6 +401,7 @@ const search = async () => {
     responsible_ids: responsibles.value.map((t) => t.id),
     tag_ids: tags.value.map((t) => t.id),
     display: display.value.length > 0 ? display.value[0]?.id : 'A',
+    include_column: includeColumn.value,
   })
   listing.value.persist({
     layer_id: layers.value,
@@ -401,6 +418,7 @@ const clearFilters = () => {
   responsibles.value = []
   tags.value = []
   layers.value = []
+  includeColumn.value = false
   display.value = [{ id: 'A', name: 'Exibir' }]
   listing.value.setCurrentPage(1)
   listing.value.setFilter('', {

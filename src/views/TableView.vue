@@ -69,7 +69,7 @@
                     <td>{{ col.description }}</td>
                     <td v-if="showCompleteColInfo">{{ col.display_name }}</td>
                     <td>
-                      {{ col.data_type }} {{ col.size ? `(${col.size})` : '' }}
+                      {{ col.data_type == 'ARRAY' && col.array_data_type ? col.data_type +' (' +col.array_data_type + ')': col.data_type}} {{ col.size ? `(${col.size})` : '' }}
                       {{ col.precision ? `(${col.precision}, ${col.scale})` : '' }}
                     </td>
                     <td class="text-center">
