@@ -36,7 +36,6 @@
               v-model="state.database"
               :rules="v$.database"
               maxlength="100"
-              required
             />
           </div>
         </div>
@@ -50,7 +49,6 @@
               v-model="state.user_name"
               :rules="v$.user_name"
               maxlength="100"
-              required
               autocomplete="username"
             />
           </div>
@@ -63,7 +61,6 @@
               v-model="state.password"
               :rules="v$.password"
               maxlength="100"
-              required
               type="password"
               autocomplete="current-password"
             />
@@ -91,16 +88,24 @@
           <LucideSave size="16px" />
           Salvar
         </button>
+        <!-- <button
+          type="submit"
+          class="btn btn-outline-secondary btn-sm me-1 px-4"
+          :disabled="v$.$invalid"
+        >
+          <LucideUnplug size="20px" color="navy" />
+          Testar conexão (FIXME)
+        </button> -->
       </div>
     </form>
   </div>
 </template>
 <script setup>
-import { onMounted, reactive, defineProps } from 'vue'
+import { reactive, defineProps } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, integer, minValue } from '@vuelidate/validators'
 import { useFetch } from '@/composables/useFetch.js'
-import { LucideSave } from 'lucide-vue-next'
+import { LucideSave, LucideUnplug } from 'lucide-vue-next'
 import { useToast } from 'vue-toastification'
 
 import TextInput from '@/components/ui/TextInput.vue'
@@ -113,6 +118,14 @@ const props = defineProps({
   provider_id: { type: String, required: true },
 })
 
+const validateJson = (value) => {
+  try {
+    JSON.parse(value)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 // Validation rules
 const rules = {
   host: {
@@ -126,18 +139,17 @@ const rules = {
     $autoDirty: true,
   },
   database: {
-    required: helpers.withMessage('Banco de dados é obrigatório', required),
     $autoDirty: true,
   },
   user_name: {
-    required: helpers.withMessage('Usuário é obrigatório', required),
     $autoDirty: true,
   },
   password: {
-    required: helpers.withMessage('Senha é obrigatória', required),
     $autoDirty: true,
   },
-  extra_parameters: {},
+  extra_parameters: {
+    validateJson: helpers.withMessage('JSON inválido', validateJson),
+  },
 }
 
 const defaults = {
@@ -159,6 +171,11 @@ const handleSubmit = async () => {
   state.provider_id = props.provider_id
 
   const method = state.id ? 'PATCH' : 'POST'
+
+  const filteredState = Object.fromEntries(
+    Object.entries(state).filter(([_, value]) => value !== "")
+  )
+
   const { data, error, fetchData } = useFetch(url, {
     method,
     headers: {

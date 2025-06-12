@@ -10,7 +10,9 @@
     class="form-control form-control-sm"
     :class="{ 'border-danger shadow-none': rules?.$errors?.length }"
     v-bind="$attrs"
-    @blur="rules.$touch"
+    @blur="rules?.$touch"
+    ref="input"
+    :disabled="disabled"
   />
   <textarea
     v-else
@@ -19,17 +21,20 @@
     class="form-control form-control-sm"
     :class="{ 'border-danger shadow-none': rules?.$errors?.length }"
     v-bind="$attrs"
-    @blur="rules.$touch"
+    @blur="rules?.$touch"
+    ref="input"
+    rows="4"
+    :disabled="disabled"
   />
   <div v-if="displayError" class="form-text text-danger">
-    <span v-for="error in rules.$errors" :key="error.$uid">
+    <span v-for="error in rules?.$errors" :key="error.$uid">
       {{ error.$message }}
     </span>
     &nbsp;
   </div>
 </template>
 <script setup>
-import { defineProps, computed, ref, defineEmits, defineOptions } from 'vue'
+import { defineProps, computed, ref, defineEmits, defineOptions, onMounted } from 'vue'
 
 defineOptions({ inheritAttrs: true })
 const props = defineProps({
@@ -39,10 +44,18 @@ const props = defineProps({
   rules: { type: Object, required: false },
   displayError: { type: Boolean, default: true },
   multiLine: { type: Boolean, default: false },
+  focus: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
 })
 const modelValueProxy = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 })
 const emit = defineEmits(['update:modelValue'])
+const input = ref()
+onMounted(() => {
+  if (props.focus) {
+    input.value.focus()
+  }
+})
 </script>

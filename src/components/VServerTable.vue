@@ -1,25 +1,30 @@
 <!-- VServerTable.vue -->
 <template>
-  <div class="v-server-table-area">
+  <div class="v-server-table-area border p-3 rounded-3">
     <slot v-if="options.filterable" name="filters">
       <div class="filters">
-        <form class="mb-4" @submit.prevent="$event.preventDefault()">
+        <component :is="useForm ? 'form' : 'div'" class="mb-4 px-1" @submit.prevent="$event.preventDefault()">
           <div class="justify-content-between d-flex">
-            <div class="col-5">
-              <label for="filter font-weight-bold">Filtro</label>
-              <input
-                :value="query"
-                type="text"
-                placeholder="Busca"
-                name="filter"
-                autocomplete="off"
-                class="form-control form-control-sm"
-                maxlength="50"
-                @input="search($event)"
-              />
-            </div>
-            <div class="col-5">
-              <slot name="afterFilter"></slot>
+            <template v-if="showFilter">
+              <div class="col-5">
+                <label for="filter" class="font-weight-bold">Filtro</label>
+                <input
+                  :value="query"
+                  type="text"
+                  placeholder="Busca"
+                  name="filter"
+                  autocomplete="off"
+                  class="form-control form-control-sm"
+                  maxlength="50"
+                  @input="search($event)"
+                />
+              </div>
+              <div class="col-5">
+                <slot name="afterFilter"></slot>
+              </div>
+            </template>
+            <div v-else class="col-10">
+              <slot name="customFilter"></slot>
             </div>
             <div class="col-2 text-end">
               <span
@@ -40,7 +45,7 @@
               </span>
             </div>
           </div>
-        </form>
+        </component>
       </div>
     </slot>
     <table v-show="showSkeleton && firstLoad" class="table b-table table-striped table-bordered">
@@ -122,6 +127,7 @@
 
 <script setup>
 import { debounce } from '@/util.js'
+import { defineEmits } from 'vue'
 import SpinnerDisplay from '@/components/SpinnerDisplay.vue'
 import PagerComponent from '@/components/PagerComponent.vue'
 
@@ -135,8 +141,11 @@ const props = defineProps({
   columns: { type: Array, required: true },
   name: { type: String, required: false, default: Math.random().toString(36).slice(2, 7) },
   showSkeleton: { type: Boolean, required: false, default: true },
+  showFilter: { type: Boolean, required: false, default: true },
+  useForm: {type: Boolean, required: false, default: true}
 })
 
+const emit = defineEmits(['loaded'])
 const getTableHeader = (col) =>
   'headings' in props.options && props.options.headings[col]
     ? props.options.headings[col]
@@ -216,7 +225,7 @@ const populateTable = async () => {
       const { data, count, customQueries } = await props.options.requestFunction(defaultOptions)
 
       if (props.options?.saveState) {
-        tableCustomQueries.value = customQueries
+        //tableCustomQueries.value = customQueries
         const params = { orderBy: {} }
         params.orderBy.column = sortColumn.value
         params.orderBy.ascending = sortDirection.value === 'asc'
@@ -224,6 +233,9 @@ const populateTable = async () => {
         params.query = query.value
         params.page = currentPage.value
         params.customQueries = tableCustomQueries.value
+        if (persistData.value) {
+          localStorage[`vuetables_${props.name}:persisted`] = JSON.stringify(persistData.value)
+        }
         localStorage[`vuetables_${props.name}`] = JSON.stringify(params)
       }
       tableData.value = data || []
@@ -291,15 +303,17 @@ const load = () => {
   if (props.options?.saveState) {
     if (props.options.saveState) {
       const saved = localStorage[`vuetables_${props.name}`]
+      const persisted = localStorage[`vuetables_${props.name}:persisted`]
       if (saved) {
         try {
           const params = JSON.parse(saved)
           sortColumn.value = params.orderBy?.column
-          ;(sortDirection.value = params.orderBy.ascending ? 'asc' : 'desc'),
-            (perPage.value = params.perPage),
-            (query.value = params.query),
-            (currentPage.value = params.page)
+          sortDirection.value = params.orderBy.ascending ? 'asc' : 'desc'
+          perPage.value = params.perPage
+          query.value = params.query
+          currentPage.value = params.page
           tableCustomQueries.value = params.customQueries
+          emit('loaded', params, persisted ? JSON.parse(persisted) : {})
         } catch (e) {
           console.debug(e)
           //ignore
@@ -322,6 +336,8 @@ const setLoading = (v) => (loading.value = v)
 watch(currentPage, populateTable)
 watch(perPage, populateTable)
 
+const persistData = ref()
+const persist = (data) => (persistData.value = data)
 defineExpose({
   setFilter,
   getData,
@@ -330,6 +346,7 @@ defineExpose({
   setCurrentPage,
   setFirstLoad,
   setLoading,
+  persist,
 })
 </script>
 
@@ -340,7 +357,7 @@ div.table-area {
   overflow: auto;
 }
 .server-table >>> td {
-  padding: 5px 5px;
+  padding: 0.5rem 0.5rem;
   font-size: 0.9em;
 }
 .server-table {

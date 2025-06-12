@@ -7,7 +7,7 @@
       <li
         v-for="pageNumber in displayedPages"
         :key="pageNumber"
-        :class="{ active: currentPage === pageNumber }"
+        :class="{ 'lemon-active-bg': currentPage === pageNumber }"
         @click="gotoPage(pageNumber)"
       >
         {{ pageNumber }}
@@ -92,8 +92,8 @@ li {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #007bff;
-  background-color: #fff;
+  /* color: #007bff;
+  background-color: #fff; */
   border: 1px solid #dee2e6;
   border-radius: 2px;
 }

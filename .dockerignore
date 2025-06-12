@@ -1,0 +1,32 @@
+# Node modules
+node_modules
+
+# Logs
+logs
+*.log
+
+# Build output
+dist
+dist-ssr
+
+# Test output
+coverage
+/cypress/videos/
+/cypress/screenshots/
+
+# Environment files
+.env
+.env.*
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+Thumbs.db

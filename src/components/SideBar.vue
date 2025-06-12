@@ -16,24 +16,51 @@
             aria-current-value="page"
           >
             <div class="icon-wrapper">
-              <telescope-icon class="sidebar-icon" />
+              <telescope-icon class="sidebar-icon" aria-labelledby="explore" />
             </div>
-            <span class="menu-text">Explorar catálogo</span>
+            <span id="explore" class="menu-text">Explorar catálogo</span>
+          </router-link>
+        </li>
+
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'people' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar pessoas"
+            aria-current-value="page"
+          >
+            <div class="icon-wrapper">
+              <LucideContact2 class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Pessoas</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link
-            :to="{ name: 'about' }"
+            :to="{ name: 'companies' }"
             class="nav-link text-white text-nowrap active"
-            aria-label="Exiba a lista de usuários"
+            aria-label="Listar e gerenciar organizações"
             aria-current-value="page"
           >
             <div class="icon-wrapper">
-              <Users class="sidebar-icon" />
+              <LucideBuilding class="sidebar-icon" />
             </div>
-            <span class="menu-text">Users</span>
+            <span class="menu-text">Organizações</span>
           </router-link>
         </li>
+        <!-- <li class="nav-item">
+          <router-link
+            :to="{ name: 'domains' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar domínios"
+            aria-current-value="page"
+          >
+            <div class="icon-wrapper">
+              <LucideLaptopMinimal class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Sistemas</span>
+          </router-link>
+        </li> -->
         <li class="nav-item">
           <router-link
             :to="{ name: 'domains' }"
@@ -55,7 +82,7 @@
             aria-current-value="page"
           >
             <div class="icon-wrapper">
-              <Layers2 class="sidebar-icon" />
+              <Layers class="sidebar-icon" />
             </div>
             <span class="menu-text">Camadas</span>
           </router-link>
@@ -73,17 +100,57 @@
           </router-link>
         </li>
       </ul>
+      <ul class="nav flex-column border-top mb-5">
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'search' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Pesquisar ativos"
+          >
+            <div class="icon-wrapper">
+              <LucideSearch class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Pesquisar ativos</span>
+          </router-link>
+        </li>
+      </ul>
       <ul class="nav flex-column mt-auto border-top mb-5">
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'users' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar usuários"
+          >
+            <div class="icon-wrapper">
+              <LucideUsers class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Usuários</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link
+            :to="{ name: 'roles' }"
+            class="nav-link text-white text-nowrap active"
+            aria-label="Listar e gerenciar grupos"
+          >
+            <div class="icon-wrapper">
+              <Award class="sidebar-icon" />
+            </div>
+            <span class="menu-text">Grupos</span>
+          </router-link>
+        </li>
+        <!--
         <li class="nav-item">
           <a class="nav-link text-white" href="#" aria-label="Editar configurações">
             <div class="icon-wrapper">
               <Settings class="sidebar-icon" />
             </div>
-            <span class="menu-text">Settings</span>
+            <span class="menu-text">Configurações</span>
           </a>
         </li>
+      -->
         <li class="nav-item">
-          <a class="nav-link text-white" href="#" aria-label="Sair, encerrando a sessão do usuário">
+          <a class="nav-link text-white" @click="authService.logout" aria-label="Sair, encerrando a sessão do usuário">
             <div class="icon-wrapper">
               <log-out class="sidebar-icon" />
             </div>
@@ -97,6 +164,7 @@
 </template>
 <script setup>
 import {
+  Award,
   Users,
   Settings,
   TelescopeIcon,
@@ -106,9 +174,18 @@ import {
   Crown,
   Layers2,
   Tags,
+  LucideSquareUser,
+  LucideBuilding,
+  LucideLaptopMinimal,
+  Layers,
+  LucideContact2,
+  LucideUsers,
+  LucideSearch,
 } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authService } from '../services/auth';
+
 
 const emit = defineEmits(['expandSidebar', 'collapseSidebar'])
 const isCollapsed = ref(true)
@@ -128,7 +205,12 @@ const currentRoute = ref(router.currentRoute.value.name)
 <style scoped>
 .router-link-active {
   xbackground: #8f599e;
-  background: #445f7f;
+  xbackground: #445f7f;
+  background-color: #235c00;
+  margin: 0;
+}
+a.nav-link:hover {
+  background-color: #235c00;
   margin: 0;
 }
 .sidebar {

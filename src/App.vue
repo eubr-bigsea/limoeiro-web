@@ -1,11 +1,12 @@
-<!-- Layout.vue -->
 <template>
-  <main class="d-flex vh-100">
-    <!-- Sidebar -->
-    <side-bar />
+  <main class="d-flex main-content-area">
+    <!-- Sidebar - Mostrar apenas se não for rota de login/auth -->
+    <side-bar v-if="!isAuthRoute" />
+    
     <!-- Main Content Area -->
     <div class="d-flex flex-column flex-grow-1">
-      <main-toolbar />
+      <main-toolbar v-if="!isAuthRoute" />
+      
       <!-- Main Content -->
       <div class="main-content pt-3">
         <router-view v-slot="{ Component }">
@@ -19,17 +20,20 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import SideBar from '@/components/SideBar.vue'
 import MainToolbar from '@/components/MainToolbar.vue'
+
+const route = useRoute()
+
+const isAuthRoute = computed(() => {
+  return route.path.startsWith('/login') || route.path.startsWith('/auth')
+})
 </script>
+
 <style scoped>
-.main-content {
-  max-height: calc(100vh - 55px);
-  overflow: auto;
-  overflow-x: hidden;
-}
-main {
-  /* background: red; */
-  /* overflow: hidden; */
+.main-content-area {
+  xoverflow: hidden;
 }
 </style>

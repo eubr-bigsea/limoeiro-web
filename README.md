@@ -55,3 +55,12 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+## Disable Authentication
+
+By default, the project enforces OIDC authentication for routes.
+
+If you want to **disable authentication during development** (e.g., to test the interface without logging in), add the following environment variable to your `.env` file:
+
+```env
+VITE_AUTH_DISABLED=true
+```

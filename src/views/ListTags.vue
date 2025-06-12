@@ -1,9 +1,20 @@
 <template>
   <div class="mx-2">
-    <list-view-header title="Tags" />
-    <v-server-table :options="options" :columns="columns">
+    <bread-crumb :items="names" />
+    <list-view-header title="Tags" @add="handleAdd" />
+    <v-server-table :options="options" :columns="columns" ref="listing">
       <template #actions="props">
-        <row-list-action-buttons @edit="handleEdit" @delete="handleDelete" :row="props.row" />
+        <row-list-action-buttons
+          :row="props.row"
+          :edit-link="{
+            name: 'edit-tag',
+            params: { id: props.row.id },
+          }"
+          @delete="handleDelete"
+        />
+      </template>
+      <template #deleted="props">
+        {{ props.row.deleted ? 'Sim' : 'Não' }}
       </template>
     </v-server-table>
   </div>
@@ -11,9 +22,17 @@
 <script setup>
 import { useFetch } from '@/composables/useFetch.js'
 import { useVServerTable } from '@/composables/useVServerTable'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+
+import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import ListViewHeader from '@/components/ui/ListViewHeader.vue'
 import VServerTable from '@/components/VServerTable.vue'
 import RowListActionButtons from '@/components/ui/RowListActionButtons.vue'
+import { useFetchResponseHandler } from '@/composables/useFetchResponseHandler'
+
+const router = useRouter()
+const { handleFetchResponse } = useFetchResponseHandler()
 
 const loadTags = async (options) => {
   const { data, fetchData } = useFetch(
@@ -25,11 +44,13 @@ const loadTags = async (options) => {
 
 const { columns, options } = useVServerTable()
   .name('tags')
-  .columns('name', 'description', 'actions')
-  .headSkin('table-primary')
+  .columns('name', 'description', 'deleted', 'applicable_to', 'actions')
+  .headSkin('table-secondary fw-bold')
   .headings({
     name: 'Nome',
     description: 'Descrição',
+    deleted: 'Desabilitado',
+    applicable_to: 'Aplicável a',
     actions: 'Ações',
   })
   .requestFunction(loadTags)
@@ -39,11 +60,27 @@ const { columns, options } = useVServerTable()
   .columnsStyles({ actions: { width: '150px' } })
   .columnsClasses({ actions: ['text-center'] })
   .build()
-
-const handleDelete = (row) => {
-  console.debug(row)
+const listing = ref()
+const handleDelete = async (row) => {
+  const { data, fetchData, error } = useFetch(`/tags/${row.id}`, { method: 'DELETE' })
+  await fetchData()
+  handleFetchResponse(error, data, {
+    editing: false,
+    state: null,
+    successMessage: 'Registro excluído com sucesso!',
+    redirectRoute: {
+      name: 'tags',
+    },
+  })
+  listing.value.refresh()
 }
-const handleEdit = (row) => {
-  console.debug(row)
+const handleAdd = () => {
+  router.push({ name: 'add-tag' })
 }
+const names = ref([
+  {
+    label: 'Tags',
+    route: 'tags',
+  },
+])
 </script>

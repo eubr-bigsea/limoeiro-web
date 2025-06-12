@@ -1,20 +1,37 @@
 <template>
   <div class="mx-2 my-2">
-    <list-view-header title="Domínios" />
-    <v-server-table :options="options" :columns="columns">
+    <bread-crumb :items="names" />
+    <list-view-header title="Domínios" @add="handleAdd" />
+    <v-server-table :options="options" :columns="columns" ref="listing">
       <template #actions="props">
-        <row-list-action-buttons @edit="handleEdit" @delete="handleDelete" :row="props.row" />
+        <row-list-action-buttons
+          :row="props.row"
+          :edit-link="{
+            name: 'edit-domain',
+            params: { id: props.row.id },
+          }"
+          @delete="handleDelete"
+        />
+      </template>
+      <template #deleted="props">
+        {{ props.row.deleted ? 'Sim' : 'Não' }}
       </template>
     </v-server-table>
   </div>
 </template>
 <script setup>
 import { useFetch } from '@/composables/useFetch.js'
-
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useFetchResponseHandler } from '@/composables/useFetchResponseHandler'
 import { useVServerTable } from '@/composables/useVServerTable'
+import BreadCrumb from '@/components/ui/BreadCrumb.vue'
 import VServerTable from '@/components/VServerTable.vue'
 import RowListActionButtons from '@/components/ui/RowListActionButtons.vue'
 import ListViewHeader from '@/components/ui/ListViewHeader.vue'
+
+const router = useRouter()
+const { handleFetchResponse } = useFetchResponseHandler()
 
 const loadDomains = async (options) => {
   const { data, fetchData } = useFetch(
@@ -25,24 +42,43 @@ const loadDomains = async (options) => {
 }
 const { columns, options } = useVServerTable()
   .name('domains')
-  .columns('display_name', 'actions')
+  .columns('name', 'description', 'deleted', 'actions')
   .headSkin('table-secondary fw-bold')
   .headings({
-    display_name: 'Nome',
+    name: 'Nome',
+    deleted: 'Desabilitado',
+    description: 'Descrição',
     actions: 'Ações',
   })
   .requestFunction(loadDomains)
   .filterable('query')
-  .sortable('display_name')
+  .sortable('name')
   .skin('table table-bordered table-sm table-hover align-middle')
   .columnsStyles({ actions: { width: '150px', 'text-align': 'center', background: 'red' } })
   .columnsClasses({ actions: ['text-center'] })
   .build()
 
-const handleDelete = (row) => {
-  console.debug(row)
+const listing = ref()
+const handleDelete = async (row) => {
+  const { data, fetchData, error } = useFetch(`/domains/${row.id}`, { method: 'DELETE' })
+  await fetchData()
+  handleFetchResponse(error, data, {
+    editing: false,
+    state: null,
+    successMessage: 'Registro excluído com sucesso!',
+    redirectRoute: {
+      name: 'domains',
+    },
+  })
+  listing.value.refresh()
 }
-const handleEdit = (row) => {
-  console.debug(row)
+const handleAdd = () => {
+  router.push({ name: 'add-domain' })
 }
+const names = ref([
+  {
+    label: 'Domínios',
+    route: 'domains',
+  },
+])
 </script>
