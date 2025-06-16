@@ -40,8 +40,15 @@ const router = useRouter()
 const { handleFetchResponse } = useFetchResponseHandler()
 
 const loadRoles = async (options) => {
+  const queryParams = {
+    query: options.query || '',
+    sort_by: options.orderBy,
+    sort_order: options.ascending ? 'asc' : 'desc',
+    page: options.page,
+    page_size: options.limit,
+  }
   const { data, fetchData } = useFetch(
-    `/roles/?query=${options.query || ''}&sort_by=${options.orderBy}&sort_order=${options.ascending ? 'asc' : 'desc'}&page=${options.page}`,
+    `/roles/?${new URLSearchParams(queryParams).toString()}`,
   )
   await fetchData()
   return { data: data.value.items, count: data.value.count }
