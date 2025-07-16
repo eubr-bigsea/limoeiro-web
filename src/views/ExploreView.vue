@@ -139,6 +139,7 @@ const loadProviders = async (options) => {
     sort_by: options.orderBy,
     sort_order: options.ascending ? 'asc' : 'desc',
     page: options.page,
+    page_size: options.limit,
   }
   const url = `/database-providers/?${new URLSearchParams(queryParams).toString()}`
   const { data, fetchData } = useFetch(url)

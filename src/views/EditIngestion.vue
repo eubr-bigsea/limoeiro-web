@@ -360,14 +360,14 @@ const handleSave = async () => {
     toast.success('Dados salvos com sucesso!', { timeout: 5000 })
   }
 }
-const names = ref([
+const names = computed(() => [
   {
     label: 'Explorar',
     route: 'explore',
   },
   {
-    label: 'selected.value.display_name',
-    route: 'explore-databases',
+    label: state.name || 'Nova ingestão',
+    route: 'explore-database-providers',
     id: 1,
   },
 ])
