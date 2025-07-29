@@ -96,7 +96,7 @@
           <LucideUnplug size="20px" color="navy" />
           Testar conexão (FIXME)
         </button> -->
-      </div>
+        </div>
     </form>
   </div>
 </template>
@@ -162,7 +162,13 @@ const defaults = {
   extra_parameters: null,
   provider_id: props.provider_id,
 }
-const state = reactive({ ...defaults, ...(props.connection || {}) })
+const decodedConnection = { ...props.connection };
+
+if (decodedConnection.password && typeof decodedConnection.password === 'string') {
+  decodedConnection.password = decodeURIComponent(decodedConnection.password);
+}
+
+const state = reactive({ ...defaults, ...decodedConnection });
 
 const v$ = useVuelidate(rules, state)
 
@@ -172,16 +178,18 @@ const handleSubmit = async () => {
 
   const method = state.id ? 'PATCH' : 'POST'
 
-  const filteredState = Object.fromEntries(
-    Object.entries(state).filter(([_, value]) => value !== "")
-  )
+  const dataToSend = { ...state };
+
+  if (dataToSend.password) {
+    dataToSend.password = encodeURIComponent(dataToSend.password);
+  }
 
   const { data, error, fetchData } = useFetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(state),
+    body: JSON.stringify(dataToSend), 
   })
   await fetchData()
   if (error.value) {
@@ -196,9 +204,13 @@ const handleSubmit = async () => {
   } else {
     Object.keys(state).forEach((key) => {
       if (key in data.value) {
-        state[key] = data.value[key]
+        if (key === 'password' && typeof data.value[key] === 'string') {
+          state[key] = decodeURIComponent(data.value[key]);
+        } else {
+          state[key] = data.value[key];
+        }
       }
-    })
+    });
     toast.success('Dados salvos com sucesso!', { timeout: 5000 })
   }
 }
